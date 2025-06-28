@@ -22,9 +22,11 @@ public class BladderOverlay {
             int barWidth = 182;
             int filled = barWidth * percent / 100;
             int x = width / 2 - 91;
-            int y = event.getWindow().getGuiScaledHeight() - 60;
-            AbstractGui.fill(stack, x, y, x + barWidth, y + 5, 0xFF555555);
-            AbstractGui.fill(stack, x, y, x + filled, y + 5, 0xFFFFFF00);
+            int y = event.getWindow().getGuiScaledHeight() - 49;
+            AbstractGui.fill(stack, x, y, x + barWidth, y + 5, 0x90000000);
+            if (filled > 0) {
+                AbstractGui.fill(stack, x, y, x + filled, y + 5, 0xFFFFD800);
+            }
         });
     }
 }

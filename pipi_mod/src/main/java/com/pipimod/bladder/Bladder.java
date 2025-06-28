@@ -2,7 +2,7 @@ package com.pipimod.bladder;
 
 public class Bladder {
     private int level = 0;
-    private static final int MAX_LEVEL = 1200; // one minute of peeing at 20tps
+    public static final int MAX_LEVEL = 1200; // one minute of peeing at 20tps
 
     private int fillCounter = 0;
     private int peeTicks = 0;
@@ -28,6 +28,20 @@ public class Bladder {
 
     public void empty() {
         level = 0;
+    }
+
+    public void setLevel(int amount) {
+        if (amount < 0) amount = 0;
+        if (amount > MAX_LEVEL) amount = MAX_LEVEL;
+        level = amount;
+    }
+
+    public void addLevel(int amount) {
+        setLevel(level + amount);
+    }
+
+    public void reduceLevel(int amount) {
+        setLevel(level - amount);
     }
 
     public void drain(int amount) {

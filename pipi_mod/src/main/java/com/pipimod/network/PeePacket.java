@@ -6,6 +6,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import com.pipimod.util.TemporaryItemManager;
 import com.pipimod.bladder.BladderProvider;
@@ -34,6 +35,8 @@ public class PeePacket {
                         Vector3d velocity = player.getLookAngle().scale(0.4);
                         TemporaryItemManager.spawn(world, start, new ItemStack(Blocks.YELLOW_CONCRETE), velocity, 60);
                         world.playSound(null, player.blockPosition(), net.minecraft.util.SoundEvents.BUCKET_EMPTY, net.minecraft.util.SoundCategory.PLAYERS, 0.5F, 1.0F);
+                    } else {
+                        player.sendMessage(new StringTextComponent("Мочевой пузырь пуст"), player.getUUID());
                     }
                 });
             }
