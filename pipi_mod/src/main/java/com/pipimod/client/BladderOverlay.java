@@ -9,7 +9,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "pipimod", value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = "pipimod", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class BladderOverlay {
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
