@@ -14,6 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 @Mod.EventBusSubscriber(modid = "pipimod", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PeeKeyHandler {
     public static KeyBinding PEE_KEY;
+    private static int delay = 0;
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
@@ -25,8 +26,12 @@ public class PeeKeyHandler {
     public static class ClientEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
+            if (delay > 0) delay--;
             if (PEE_KEY != null && PEE_KEY.isDown()) {
-                NetworkHandler.CHANNEL.sendToServer(new PeePacket());
+                if (delay == 0) {
+                    NetworkHandler.CHANNEL.sendToServer(new PeePacket());
+                    delay = 1; // send once every two ticks
+                }
             }
         }
     }

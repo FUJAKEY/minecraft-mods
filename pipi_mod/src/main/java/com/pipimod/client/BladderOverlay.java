@@ -19,10 +19,10 @@ public class BladderOverlay {
             int percent = b.getPercent();
             MatrixStack stack = event.getMatrixStack();
             int width = event.getWindow().getGuiScaledWidth();
-            int barWidth = 100;
+            int barWidth = 182;
             int filled = barWidth * percent / 100;
-            int x = (width - barWidth) / 2;
-            int y = event.getWindow().getGuiScaledHeight() - 50;
+            int x = width / 2 - 91;
+            int y = event.getWindow().getGuiScaledHeight() - 60;
             AbstractGui.fill(stack, x, y, x + barWidth, y + 5, 0xFF555555);
             AbstractGui.fill(stack, x, y, x + filled, y + 5, 0xFFFFFF00);
         });
