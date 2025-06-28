@@ -22,7 +22,7 @@ public class PeeKeyHandler {
         ClientRegistry.registerKeyBinding(PEE_KEY);
     }
 
-    @Mod.EventBusSubscriber(modid = "pipimod", value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = "pipimod", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ClientEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
