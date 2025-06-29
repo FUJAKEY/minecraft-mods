@@ -11,6 +11,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.block.BlockState;
 
+import com.pipimod.energy.MekanismCompat;
+
 public class EnergyCellTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
     private EnergyStorage storage = new EnergyStorage(0, 0, 0, 0);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
@@ -23,6 +25,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public void setCapacity(int capacity) {
         this.capacity = capacity;
         this.storage = new EnergyStorage(capacity, capacity, capacity, storage.getEnergyStored());
+        setChanged();
     }
 
     @Override
@@ -49,6 +52,9 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == CapabilityEnergy.ENERGY) return energy.cast();
+        if (MekanismCompat.isLoaded() && cap == MekanismCompat.getCapability()) {
+            return MekanismCompat.createWrapper(this).cast();
+        }
         return super.getCapability(cap, side);
     }
 
@@ -60,12 +66,16 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return storage.receiveEnergy(maxReceive, simulate);
+        int r = storage.receiveEnergy(maxReceive, simulate);
+        if (!simulate && r > 0) setChanged();
+        return r;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return storage.extractEnergy(maxExtract, simulate);
+        int e = storage.extractEnergy(maxExtract, simulate);
+        if (!simulate && e > 0) setChanged();
+        return e;
     }
 
     @Override
@@ -80,6 +90,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         } else {
             storage.extractEnergy(current - amount, false);
         }
+        setChanged();
     }
 
     @Override

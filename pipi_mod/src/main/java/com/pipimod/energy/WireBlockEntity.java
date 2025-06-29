@@ -10,6 +10,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.capabilities.Capability;
+import com.pipimod.energy.MekanismCompat;
 
 import java.util.EnumMap;
 
@@ -44,7 +45,10 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                 }
                 if (wanted > 0) {
                     int received = other.extractEnergy(wanted, false);
-                    if (received > 0) storage.receiveEnergy(received, false);
+                    if (received > 0) {
+                        storage.receiveEnergy(received, false);
+                        setChanged();
+                    }
                 }
             }
         }
@@ -62,7 +66,10 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                 }
                 if (toSend > 0) {
                     int accepted = other.receiveEnergy(toSend, false);
-                    if (accepted > 0) storage.extractEnergy(accepted, false);
+                    if (accepted > 0) {
+                        storage.extractEnergy(accepted, false);
+                        setChanged();
+                    }
                 }
             }
         }
@@ -70,6 +77,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     public void toggleMode(Direction side) {
         modes.put(side, modes.get(side).next());
+        setChanged();
     }
 
     public WireMode getMode(Direction side) {
@@ -103,6 +111,9 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == CapabilityEnergy.ENERGY) return energy.cast();
+        if (MekanismCompat.isLoaded() && cap == MekanismCompat.getCapability()) {
+            return MekanismCompat.createWrapper(this).cast();
+        }
         return super.getCapability(cap, side);
     }
 
@@ -113,8 +124,20 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     // IEnergyStorage implementation
-    @Override public int receiveEnergy(int maxReceive, boolean simulate) { return storage.receiveEnergy(maxReceive, simulate); }
-    @Override public int extractEnergy(int maxExtract, boolean simulate) { return storage.extractEnergy(maxExtract, simulate); }
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        int r = storage.receiveEnergy(maxReceive, simulate);
+        if (!simulate && r > 0) setChanged();
+        return r;
+    }
+
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        int e = storage.extractEnergy(maxExtract, simulate);
+        if (!simulate && e > 0) setChanged();
+        return e;
+    }
+
     @Override public int getEnergyStored() { return storage.getEnergyStored(); }
     @Override public int getMaxEnergyStored() { return storage.getMaxEnergyStored(); }
     @Override public boolean canExtract() { return true; }
