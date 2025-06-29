@@ -13,7 +13,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.ISelectionContext;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nullable;
 
@@ -91,12 +91,12 @@ public class EnergyWireBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, net.minecraft.world.ISelectionContext ctx) {
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, CollisionContext ctx) {
         return buildShape(state);
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, net.minecraft.world.ISelectionContext ctx) {
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, CollisionContext ctx) {
         return buildShape(state);
     }
 
