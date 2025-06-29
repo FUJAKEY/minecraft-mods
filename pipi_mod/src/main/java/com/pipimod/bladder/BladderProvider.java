@@ -1,12 +1,16 @@
 package com.pipimod.bladder;
 
-import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
+/**
+ * Capability provider for the {@link Bladder} capability. This attaches to
+ * every player entity and stores the current bladder level in NBT.
+ */
 public class BladderProvider implements ICapabilitySerializable<CompoundNBT> {
 
     @CapabilityInject(Bladder.class)
@@ -28,11 +32,6 @@ public class BladderProvider implements ICapabilitySerializable<CompoundNBT> {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        instance.ifPresent(b -> {
-            b.empty();
-            for (int i = 0; i < nbt.getInt("Level"); i++) {
-                b.tick();
-            }
-        });
+        instance.ifPresent(b -> b.setLevel(nbt.getInt("Level")));
     }
 }

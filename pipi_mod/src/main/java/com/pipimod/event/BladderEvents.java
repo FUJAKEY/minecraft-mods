@@ -3,13 +3,17 @@ package com.pipimod.event;
 import com.pipimod.bladder.Bladder;
 import com.pipimod.bladder.BladderProvider;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 
+/**
+ * Handles attaching the bladder capability and ticking it each server tick. It
+ * also applies movement penalties and confusion when the bladder is too full.
+ */
 @Mod.EventBusSubscriber(modid = "pipimod")
 public class BladderEvents {
 

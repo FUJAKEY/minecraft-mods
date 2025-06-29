@@ -1,39 +1,70 @@
 package com.pipimod.bladder;
 
+/**
+ * Stores the bladder state for a player. The bladder gradually fills over
+ * time and drains while the player is peeing.
+ */
 public class Bladder {
-    private int level = 0;
-    public static final int MAX_LEVEL = 1200; // one minute of peeing at 20tps
+    /**
+     * Maximum amount of fluid the bladder can hold. With a drain rate of two
+     * units per network packet and packets sent every two ticks the bladder will
+     * completely empty in sixty seconds at 20TPS.
+     */
+    public static final int MAX_LEVEL = 1200;
 
-    private int fillCounter = 0;
-    private int peeTicks = 0;
+    /** Ticks between each one percent fill increment. */
+    private static final int FILL_INTERVAL = 200; // ten seconds
 
+    private int level;
+    private int fillTimer;
+    private int pauseTicks;
+
+    /** Called every tick while the player exists. */
     public void tick() {
-        if (peeTicks > 0) {
-            peeTicks--; // pause filling while peeing
+        if (pauseTicks > 0) {
+            pauseTicks--;
             return;
         }
         if (level < MAX_LEVEL) {
-            fillCounter++;
-            if (fillCounter >= 200) { // 10 seconds per 1%
+            fillTimer++;
+            if (fillTimer >= FILL_INTERVAL) {
                 level += MAX_LEVEL / 100;
-                if (level > MAX_LEVEL) level = MAX_LEVEL;
-                fillCounter = 0;
+                if (level > MAX_LEVEL) {
+                    level = MAX_LEVEL;
+                }
+                fillTimer = 0;
             }
         }
     }
 
-    public boolean isFull() {
-        return level >= MAX_LEVEL;
+    /** Drains the given amount and pauses filling briefly. */
+    public void drain(int amount) {
+        if (amount <= 0 || level <= 0) {
+            return;
+        }
+        level -= amount;
+        if (level < 0) {
+            level = 0;
+        }
+        pauseTicks = 2;
     }
 
+    /** Empties the bladder completely. */
     public void empty() {
         level = 0;
+        fillTimer = 0;
     }
 
+    /** Sets the bladder level clamped to the valid range. */
     public void setLevel(int amount) {
-        if (amount < 0) amount = 0;
-        if (amount > MAX_LEVEL) amount = MAX_LEVEL;
+        if (amount < 0) {
+            amount = 0;
+        }
+        if (amount > MAX_LEVEL) {
+            amount = MAX_LEVEL;
+        }
         level = amount;
+        fillTimer = 0;
     }
 
     public void addLevel(int amount) {
@@ -44,18 +75,11 @@ public class Bladder {
         setLevel(level - amount);
     }
 
-    public void drain(int amount) {
-        if (level <= 0) return;
-        level -= amount;
-        if (level < 0) level = 0;
-        peeTicks = 2; // small grace period to keep filling paused
+    public int getLevel() {
+        return level;
     }
 
     public int getPercent() {
         return level * 100 / MAX_LEVEL;
-    }
-
-    public int getLevel() {
-        return level;
     }
 }

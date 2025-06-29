@@ -1,7 +1,7 @@
 package com.pipimod.command;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.pipimod.bladder.Bladder;
 import com.pipimod.bladder.BladderProvider;
 import net.minecraft.command.CommandSource;
@@ -13,6 +13,10 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * Provides the `/bladder` command to control players' bladder levels. Only
+ * server operators can use these commands.
+ */
 @Mod.EventBusSubscriber(modid = "pipimod")
 public class BladderCommands {
     @SubscribeEvent

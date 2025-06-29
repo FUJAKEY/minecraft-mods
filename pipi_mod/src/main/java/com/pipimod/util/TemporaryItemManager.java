@@ -1,7 +1,7 @@
 package com.pipimod.util;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
@@ -12,6 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Manages short-lived item entities used to represent pee projectiles. Items
+ * are spawned with a custom lifetime and automatically removed after the time
+ * expires.
+ */
 @Mod.EventBusSubscriber(modid = "pipimod")
 public class TemporaryItemManager {
     private static final Map<ServerWorld, Map<ItemEntity, Integer>> ITEMS = new HashMap<>();

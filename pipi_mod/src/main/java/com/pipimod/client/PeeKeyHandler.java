@@ -1,16 +1,20 @@
 package com.pipimod.client;
 
-import org.lwjgl.glfw.GLFW;
 import com.pipimod.network.NetworkHandler;
 import com.pipimod.network.PeePacket;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 
+/**
+ * Handles client side key events for triggering peeing. A small delay is used
+ * to limit the rate of packets sent to the server.
+ */
 @Mod.EventBusSubscriber(modid = "pipimod", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PeeKeyHandler {
     public static KeyBinding PEE_KEY;
@@ -26,8 +30,12 @@ public class PeeKeyHandler {
     public static class ClientEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
-            if (delay > 0) delay--;
+            if (event.phase != TickEvent.Phase.END) {
+                return;
+            }
+            if (delay > 0) {
+                delay--;
+            }
             if (PEE_KEY != null && PEE_KEY.isDown() && net.minecraft.client.Minecraft.getInstance().player != null) {
                 if (delay == 0) {
                     NetworkHandler.CHANNEL.sendToServer(new PeePacket());
