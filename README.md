@@ -1,6 +1,6 @@
 # minecraft-mods
 
-## Building pipi_mod
+## Building energymod
 
 1. Install Java 8 JDK and a compatible Gradle version (7.3.3 is used).
 2. Run `gradle wrapper` to generate the wrapper jar if it is missing. You may use a minimal wrapper script like `wrapper.gradle` with a `Wrapper` task.

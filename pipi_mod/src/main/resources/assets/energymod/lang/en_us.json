@@ -1,0 +1,9 @@
+{
+  "itemGroup.energymod": "Energy Mod",
+  "block.energymod.energy_cell_ml": "Energy Cell (Ml Level)",
+  "block.energymod.energy_cell_sr": "Energy Cell (Sr Level)",
+  "block.energymod.energy_cell_mx": "Energy Cell (Mx Level)",
+  "block.energymod.energy_cell_inf": "Energy Cell (Infinite)",
+  "item.energymod.wire_tool": "Wire Tool",
+  "block.energymod.energy_wire": "Energy Wire"
+}

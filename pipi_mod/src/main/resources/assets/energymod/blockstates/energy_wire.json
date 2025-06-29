@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "energymod:block/energy_wire" }
+  }
+}
