@@ -24,15 +24,29 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     public void tick() {
         tickCounter++;
         if (tickCounter % 2 != 0) return; // 0.1 sec assuming 20 tps
+
+        // First pull energy from TAKE sides
         for (Direction dir : Direction.values()) {
+            if (modes.get(dir) != WireMode.TAKE) continue;
             TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
             if (neighbor instanceof IEnergyStorage) {
                 IEnergyStorage other = (IEnergyStorage) neighbor;
-                if (modes.get(dir) == WireMode.TAKE) {
-                    int received = other.extractEnergy(10 - storage.getEnergyStored(), false);
+                int wanted = Math.min(10, storage.getMaxEnergyStored() - storage.getEnergyStored());
+                if (wanted > 0) {
+                    int received = other.extractEnergy(wanted, false);
                     if (received > 0) storage.receiveEnergy(received, false);
-                } else {
-                    int toSend = Math.min(storage.getEnergyStored(), 10);
+                }
+            }
+        }
+
+        // Then push energy through GIVE sides
+        for (Direction dir : Direction.values()) {
+            if (modes.get(dir) != WireMode.GIVE) continue;
+            TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
+            if (neighbor instanceof IEnergyStorage) {
+                IEnergyStorage other = (IEnergyStorage) neighbor;
+                int toSend = Math.min(10, storage.getEnergyStored());
+                if (toSend > 0) {
                     int accepted = other.receiveEnergy(toSend, false);
                     if (accepted > 0) storage.extractEnergy(accepted, false);
                 }
