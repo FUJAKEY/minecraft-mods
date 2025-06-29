@@ -6,8 +6,14 @@ public enum WireMode {
     GIVE;
 
     public WireMode next() {
-        if (this == TAKE) return GIVE;
-        if (this == GIVE) return TAKE;
-        return AUTO;
+        switch (this) {
+            case AUTO:
+                return TAKE;
+            case TAKE:
+                return GIVE;
+            case GIVE:
+            default:
+                return AUTO;
+        }
     }
 }

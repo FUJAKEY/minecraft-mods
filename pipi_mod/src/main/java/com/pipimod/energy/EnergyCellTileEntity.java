@@ -4,11 +4,16 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.block.BlockState;
 
 public class EnergyCellTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
     private EnergyStorage storage = new EnergyStorage(0, 0, 0, 0);
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private int capacity = 0;
 
     public EnergyCellTileEntity() {
@@ -39,6 +44,18 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         nbt.putInt("Capacity", capacity);
         nbt.putInt("Energy", storage.getEnergyStored());
         return nbt;
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == CapabilityEnergy.ENERGY) return energy.cast();
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        energy.invalidate();
     }
 
     @Override

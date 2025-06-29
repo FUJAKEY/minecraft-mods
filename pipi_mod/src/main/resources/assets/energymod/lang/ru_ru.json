@@ -8,5 +8,6 @@
   "block.energymod.energy_wire": "Энергетический провод",
   "message.energymod.mode": "Режим %s на стороне %s",
   "message.energymod.auto": "Автоматический режим",
-  "message.energymod.energy": "%s/%s FE"
+  "message.energymod.energy": "%s/%s FE",
+  "message.energymod.wireinfo": "Режим %s - %s/%s FE"
 }

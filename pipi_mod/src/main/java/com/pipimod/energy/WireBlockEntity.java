@@ -2,14 +2,20 @@ package com.pipimod.energy;
 
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.EnumMap;
 
 public class WireBlockEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
     private final EnergyStorage storage = new EnergyStorage(10, 10, 10);
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
     private int tickCounter = 0;
 
@@ -63,14 +69,47 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     public void toggleMode(Direction side) {
-        WireMode current = modes.get(side);
-        if (current != WireMode.AUTO) {
-            modes.put(side, current.next());
-        }
+        modes.put(side, modes.get(side).next());
     }
 
     public WireMode getMode(Direction side) {
         return modes.get(side);
+    }
+
+    @Override
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
+        int energyStored = nbt.getInt("Energy");
+        storage.receiveEnergy(energyStored - storage.getEnergyStored(), false);
+        for (Direction dir : Direction.values()) {
+            String key = "Mode" + dir.getSerializedName();
+            if (nbt.contains(key)) {
+                int ord = nbt.getInt(key);
+                modes.put(dir, WireMode.values()[ord % WireMode.values().length]);
+            }
+        }
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT nbt) {
+        super.save(nbt);
+        nbt.putInt("Energy", storage.getEnergyStored());
+        for (Direction dir : Direction.values()) {
+            nbt.putInt("Mode" + dir.getSerializedName(), modes.get(dir).ordinal());
+        }
+        return nbt;
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == CapabilityEnergy.ENERGY) return energy.cast();
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        energy.invalidate();
     }
 
     // IEnergyStorage implementation

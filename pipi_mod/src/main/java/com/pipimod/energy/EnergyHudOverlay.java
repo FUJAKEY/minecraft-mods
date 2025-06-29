@@ -8,6 +8,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.util.Direction;
+
 
 @Mod.EventBusSubscriber(modid = EnergyMod.MODID, value = Dist.CLIENT)
 public class EnergyHudOverlay {
@@ -17,13 +19,19 @@ public class EnergyHudOverlay {
         Minecraft mc = Minecraft.getInstance();
         if (mc.hitResult instanceof BlockRayTraceResult) {
             BlockRayTraceResult ray = (BlockRayTraceResult) mc.hitResult;
+            FontRenderer font = mc.font;
+            MatrixStack stack = event.getMatrixStack();
+            int width = mc.getWindow().getGuiScaledWidth();
+            int height = mc.getWindow().getGuiScaledHeight();
+
             if (mc.level.getBlockEntity(ray.getBlockPos()) instanceof EnergyCellTileEntity) {
                 EnergyCellTileEntity cell = (EnergyCellTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", cell.getEnergyStored(), cell.getMaxEnergyStored()).getString();
-                FontRenderer font = mc.font;
-                MatrixStack stack = event.getMatrixStack();
-                int width = mc.getWindow().getGuiScaledWidth();
-                int height = mc.getWindow().getGuiScaledHeight();
+                font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
+            } else if (mc.player != null && (mc.player.getMainHandItem().getItem() instanceof WireToolItem || mc.player.getOffhandItem().getItem() instanceof WireToolItem) && mc.level.getBlockEntity(ray.getBlockPos()) instanceof WireBlockEntity) {
+                WireBlockEntity wire = (WireBlockEntity) mc.level.getBlockEntity(ray.getBlockPos());
+                WireMode mode = wire.getMode(ray.getDirection());
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", mode, wire.getEnergyStored(), wire.getMaxEnergyStored()).getString();
                 font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
             }
         }
