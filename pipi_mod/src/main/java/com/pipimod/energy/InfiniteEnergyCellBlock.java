@@ -11,7 +11,8 @@ public class InfiniteEnergyCellBlock extends EnergyCellBlock {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        EnergyCellTileEntity te = new EnergyCellTileEntity(Integer.MAX_VALUE);
+        EnergyCellTileEntity te = new EnergyCellTileEntity();
+        te.setCapacity(Integer.MAX_VALUE);
         te.setEnergy(Integer.MAX_VALUE);
         return te;
     }

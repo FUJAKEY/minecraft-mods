@@ -31,7 +31,9 @@ public class EnergyCellBlock extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new EnergyCellTileEntity(capacity);
+        EnergyCellTileEntity te = new EnergyCellTileEntity();
+        te.setCapacity(capacity);
+        return te;
     }
 
     @Override
