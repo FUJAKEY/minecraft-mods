@@ -19,7 +19,7 @@ public class WireItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        tooltip.add(new StringTextComponent("10 FE capacity"));
+        tooltip.add(new net.minecraft.util.text.TranslationTextComponent("tooltip.wire.capacity"));
     }
 }
 

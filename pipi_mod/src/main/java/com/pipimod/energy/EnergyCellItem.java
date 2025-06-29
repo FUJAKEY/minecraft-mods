@@ -31,7 +31,7 @@ public class EnergyCellItem extends BlockItem {
             energy = tag.getInt("Energy");
         }
         String max = capacity == Integer.MAX_VALUE ? "\u221E" : Integer.toString(capacity);
-        tooltip.add(new StringTextComponent(energy + "/" + max + " FE"));
+        tooltip.add(new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", energy, max));
     }
 }
 

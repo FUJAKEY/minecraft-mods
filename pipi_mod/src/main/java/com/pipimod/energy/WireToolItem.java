@@ -31,7 +31,8 @@ public class WireToolItem extends Item {
                 WireMode after = wire.getMode(side);
                 PlayerEntity player = context.getPlayer();
                 if (player != null) {
-                    player.displayClientMessage(new net.minecraft.util.text.TranslationTextComponent("message.energymod.mode", after, side), true);
+                    String modeStr = new net.minecraft.util.text.TranslationTextComponent("wiremode." + after.name().toLowerCase()).getString();
+                    player.displayClientMessage(new net.minecraft.util.text.TranslationTextComponent("message.energymod.mode", modeStr, side), true);
                 }
                 return ActionResultType.SUCCESS;
             }

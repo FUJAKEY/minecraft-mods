@@ -6,6 +6,8 @@ import net.minecraft.block.BlockState;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,6 +21,12 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
     private int tickCounter = 0;
+
+    private void sync() {
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
 
     public WireBlockEntity() {
         super(ModTileEntities.WIRE.get());
@@ -47,6 +55,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                                 if (received > 0) {
                                     storage.receiveEnergy(received, false);
                                     setChanged();
+                                    sync();
                                 }
                             }
                         }
@@ -66,6 +75,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                                 if (sent > 0) {
                                     storage.extractEnergy(sent, false);
                                     setChanged();
+                                    sync();
                                 }
                             }
                         }
@@ -78,6 +88,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     public void toggleMode(Direction side) {
         modes.put(side, modes.get(side).next());
         setChanged();
+        sync();
     }
 
     public WireMode getMode(Direction side) {
@@ -123,18 +134,44 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         energy.invalidate();
     }
 
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return save(new CompoundNBT());
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        load(state, tag);
+    }
+
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(getBlockState(), pkt.getTag());
+    }
+
     // IEnergyStorage implementation
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int r = storage.receiveEnergy(maxReceive, simulate);
-        if (!simulate && r > 0) setChanged();
+        if (!simulate && r > 0) {
+            setChanged();
+            sync();
+        }
         return r;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         int e = storage.extractEnergy(maxExtract, simulate);
-        if (!simulate && e > 0) setChanged();
+        if (!simulate && e > 0) {
+            setChanged();
+            sync();
+        }
         return e;
     }
 

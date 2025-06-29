@@ -9,5 +9,9 @@
   "message.energymod.mode": "Mode %s on %s",
   "message.energymod.auto": "Auto mode",
   "message.energymod.energy": "%s/%s FE",
-  "message.energymod.wireinfo": "Mode %s - %s/%s FE"
+  "message.energymod.wireinfo": "Mode %s - %s/%s FE",
+  "wiremode.auto": "Auto",
+  "wiremode.take": "Take",
+  "wiremode.give": "Give",
+  "tooltip.wire.capacity": "10 FE capacity"
 }

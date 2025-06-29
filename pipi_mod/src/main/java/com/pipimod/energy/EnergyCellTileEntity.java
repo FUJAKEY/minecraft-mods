@@ -2,6 +2,8 @@ package com.pipimod.energy;
 
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -18,6 +20,12 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private int capacity = 0;
 
+    private void sync() {
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
     public EnergyCellTileEntity() {
         super(ModTileEntities.ENERGY_CELL.get());
     }
@@ -26,6 +34,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         this.capacity = capacity;
         this.storage = new EnergyStorage(capacity, capacity, capacity, storage.getEnergyStored());
         setChanged();
+        sync();
     }
 
     @Override
@@ -40,6 +49,26 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
 
     @Override
     public void tick() {
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return save(new CompoundNBT());
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        load(state, tag);
+    }
+
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
     @Override
@@ -77,14 +106,20 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int r = storage.receiveEnergy(maxReceive, simulate);
-        if (!simulate && r > 0) setChanged();
+        if (!simulate && r > 0) {
+            setChanged();
+            sync();
+        }
         return r;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         int e = storage.extractEnergy(maxExtract, simulate);
-        if (!simulate && e > 0) setChanged();
+        if (!simulate && e > 0) {
+            setChanged();
+            sync();
+        }
         return e;
     }
 
@@ -101,6 +136,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
             storage.extractEnergy(current - amount, false);
         }
         setChanged();
+        sync();
     }
 
     @Override

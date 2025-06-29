@@ -31,7 +31,8 @@ public class EnergyHudOverlay {
             } else if (mc.player != null && (mc.player.getMainHandItem().getItem() instanceof WireToolItem || mc.player.getOffhandItem().getItem() instanceof WireToolItem) && mc.level.getBlockEntity(ray.getBlockPos()) instanceof WireBlockEntity) {
                 WireBlockEntity wire = (WireBlockEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 WireMode mode = wire.getMode(ray.getDirection());
-                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", mode, wire.getEnergyStored(), wire.getMaxEnergyStored()).getString();
+                String modeStr = new net.minecraft.util.text.TranslationTextComponent("wiremode." + mode.name().toLowerCase()).getString();
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", modeStr, wire.getEnergyStored(), wire.getMaxEnergyStored()).getString();
                 font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
             }
         }

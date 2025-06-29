@@ -9,5 +9,9 @@
   "message.energymod.mode": "Режим %s на стороне %s",
   "message.energymod.auto": "Автоматический режим",
   "message.energymod.energy": "%s/%s FE",
-  "message.energymod.wireinfo": "Режим %s - %s/%s FE"
+  "message.energymod.wireinfo": "Режим %s - %s/%s FE",
+  "wiremode.auto": "Авто",
+  "wiremode.take": "Забирать",
+  "wiremode.give": "Отдавать",
+  "tooltip.wire.capacity": "Вместимость 10 FE"
 }
