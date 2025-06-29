@@ -5,5 +5,8 @@
   "block.energymod.energy_cell_mx": "Energy Cell (Mx Level)",
   "block.energymod.energy_cell_inf": "Energy Cell (Infinite)",
   "item.energymod.wire_tool": "Wire Tool",
-  "block.energymod.energy_wire": "Energy Wire"
+  "block.energymod.energy_wire": "Energy Wire",
+  "message.energymod.mode": "Mode %s on %s",
+  "message.energymod.auto": "Auto mode",
+  "message.energymod.energy": "%s/%s FE"
 }

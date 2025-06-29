@@ -16,7 +16,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     public WireBlockEntity() {
         super(ModTileEntities.WIRE.get());
         for (Direction dir : Direction.values()) {
-            modes.put(dir, WireMode.TAKE);
+            modes.put(dir, WireMode.AUTO);
         }
     }
 
@@ -25,13 +25,17 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         tickCounter++;
         if (tickCounter % 2 != 0) return; // 0.1 sec assuming 20 tps
 
-        // First pull energy from TAKE sides
+        // First pull energy from TAKE and AUTO sides
         for (Direction dir : Direction.values()) {
-            if (modes.get(dir) != WireMode.TAKE) continue;
+            WireMode mode = modes.get(dir);
+            if (mode != WireMode.TAKE && mode != WireMode.AUTO) continue;
             TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
             if (neighbor instanceof IEnergyStorage) {
                 IEnergyStorage other = (IEnergyStorage) neighbor;
                 int wanted = Math.min(10, storage.getMaxEnergyStored() - storage.getEnergyStored());
+                if (mode == WireMode.AUTO && other.getEnergyStored() <= storage.getEnergyStored()) {
+                    wanted = 0;
+                }
                 if (wanted > 0) {
                     int received = other.extractEnergy(wanted, false);
                     if (received > 0) storage.receiveEnergy(received, false);
@@ -39,13 +43,17 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // Then push energy through GIVE sides
+        // Then push energy through GIVE and AUTO sides
         for (Direction dir : Direction.values()) {
-            if (modes.get(dir) != WireMode.GIVE) continue;
+            WireMode mode = modes.get(dir);
+            if (mode != WireMode.GIVE && mode != WireMode.AUTO) continue;
             TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
             if (neighbor instanceof IEnergyStorage) {
                 IEnergyStorage other = (IEnergyStorage) neighbor;
                 int toSend = Math.min(10, storage.getEnergyStored());
+                if (mode == WireMode.AUTO && other.getEnergyStored() >= storage.getEnergyStored()) {
+                    toSend = 0;
+                }
                 if (toSend > 0) {
                     int accepted = other.receiveEnergy(toSend, false);
                     if (accepted > 0) storage.extractEnergy(accepted, false);
@@ -55,7 +63,10 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     public void toggleMode(Direction side) {
-        modes.put(side, modes.get(side).next());
+        WireMode current = modes.get(side);
+        if (current != WireMode.AUTO) {
+            modes.put(side, current.next());
+        }
     }
 
     public WireMode getMode(Direction side) {

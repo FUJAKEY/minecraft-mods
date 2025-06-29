@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.tileentity.TileEntity;
@@ -27,10 +27,16 @@ public class WireToolItem extends Item {
             }
             if (te instanceof WireBlockEntity) {
                 WireBlockEntity wire = (WireBlockEntity) te;
+                WireMode before = wire.getMode(side);
                 wire.toggleMode(side);
+                WireMode after = wire.getMode(side);
                 PlayerEntity player = context.getPlayer();
                 if (player != null) {
-                    player.displayClientMessage(new StringTextComponent("Mode " + wire.getMode(side) + " on " + side), true);
+                    if (before == WireMode.AUTO) {
+                        player.displayClientMessage(new net.minecraft.util.text.TranslationTextComponent("message.energymod.auto"), true);
+                    } else {
+                        player.displayClientMessage(new net.minecraft.util.text.TranslationTextComponent("message.energymod.mode", after, side), true);
+                    }
                 }
                 return ActionResultType.SUCCESS;
             }

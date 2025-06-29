@@ -1,0 +1,12 @@
+{
+  "itemGroup.energymod": "Энергетический мод",
+  "block.energymod.energy_cell_ml": "Хранилище энергии (Мл. уровень)",
+  "block.energymod.energy_cell_sr": "Хранилище энергии (Ср. уровень)",
+  "block.energymod.energy_cell_mx": "Хранилище энергии (Макс. уровень)",
+  "block.energymod.energy_cell_inf": "Хранилище энергии (Бесконечное)",
+  "item.energymod.wire_tool": "Инструмент проводов",
+  "block.energymod.energy_wire": "Энергетический провод",
+  "message.energymod.mode": "Режим %s на стороне %s",
+  "message.energymod.auto": "Автоматический режим",
+  "message.energymod.energy": "%s/%s FE"
+}

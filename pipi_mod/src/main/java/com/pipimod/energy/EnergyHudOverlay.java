@@ -19,7 +19,7 @@ public class EnergyHudOverlay {
             BlockRayTraceResult ray = (BlockRayTraceResult) mc.hitResult;
             if (mc.level.getBlockEntity(ray.getBlockPos()) instanceof EnergyCellTileEntity) {
                 EnergyCellTileEntity cell = (EnergyCellTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
-                String text = cell.getEnergyStored() + "/" + cell.getMaxEnergyStored() + " FE";
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", cell.getEnergyStored(), cell.getMaxEnergyStored()).getString();
                 FontRenderer font = mc.font;
                 MatrixStack stack = event.getMatrixStack();
                 int width = mc.getWindow().getGuiScaledWidth();

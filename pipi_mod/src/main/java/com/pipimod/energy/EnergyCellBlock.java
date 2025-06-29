@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -42,7 +42,7 @@ public class EnergyCellBlock extends Block {
             TileEntity tile = world.getBlockEntity(pos);
             if (tile instanceof EnergyCellTileEntity) {
                 EnergyCellTileEntity cell = (EnergyCellTileEntity) tile;
-                player.displayClientMessage(new StringTextComponent(cell.getEnergyStored() + "/" + cell.getMaxEnergyStored() + " FE"), true);
+                player.displayClientMessage(new TranslationTextComponent("message.energymod.energy", cell.getEnergyStored(), cell.getMaxEnergyStored()), true);
             }
         }
         return ActionResultType.SUCCESS;
