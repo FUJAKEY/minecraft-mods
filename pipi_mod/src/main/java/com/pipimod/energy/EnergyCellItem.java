@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Item.Properties;
-import net.minecraft.item.ItemTooltipFlag;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -24,13 +24,13 @@ public class EnergyCellItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ItemTooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         int energy = 0;
         CompoundNBT tag = stack.getTag();
         if (tag != null && tag.contains("Energy")) {
             energy = tag.getInt("Energy");
         }
-        String max = capacity == Integer.MAX_VALUE ? "∞" : Integer.toString(capacity);
+        String max = capacity == Integer.MAX_VALUE ? "\u221E" : Integer.toString(capacity);
         tooltip.add(new StringTextComponent(energy + "/" + max + " FE"));
     }
 }
