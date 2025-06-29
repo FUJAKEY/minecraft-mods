@@ -17,10 +17,11 @@ import com.pipimod.energy.MekanismCompat;
 import java.util.EnumMap;
 
 public class WireBlockEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
-    private final EnergyStorage storage = new EnergyStorage(10, 10, 10);
+    private static final int CAPACITY = 1280;
+    private static final int TRANSFER_RATE = 1280;
+    private final EnergyStorage storage = new EnergyStorage(CAPACITY, CAPACITY, CAPACITY);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
-    private int tickCounter = 0;
 
     private void sync() {
         if (level != null && !level.isClientSide) {
@@ -37,50 +38,45 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public void tick() {
-        tickCounter++;
-        if (tickCounter % 2 != 0) return; // run every 0.1 sec
-
-        boolean pullPhase = ((tickCounter / 2) % 2) == 0;
-
-        if (pullPhase) {
-            for (Direction dir : Direction.values()) {
-                WireMode mode = modes.get(dir);
-                TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-                if (neighbor != null) {
-                    neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
-                        if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > storage.getEnergyStored())) {
-                            int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
-                            if (space > 0) {
-                                int received = other.extractEnergy(Math.min(10, space), false);
-                                if (received > 0) {
-                                    storage.receiveEnergy(received, false);
-                                    setChanged();
-                                    sync();
-                                }
+        // pull from TAKE or higher-energy neighbors
+        for (Direction dir : Direction.values()) {
+            WireMode mode = modes.get(dir);
+            TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
+            if (neighbor != null) {
+                neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                    if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > storage.getEnergyStored())) {
+                        int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
+                        if (space > 0) {
+                            int received = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
+                            if (received > 0) {
+                                storage.receiveEnergy(received, false);
+                                setChanged();
+                                sync();
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
-        } else { // push phase
-            for (Direction dir : Direction.values()) {
-                WireMode mode = modes.get(dir);
-                TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-                if (neighbor != null) {
-                    neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
-                        if (mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < storage.getEnergyStored())) {
-                            int available = storage.getEnergyStored();
-                            if (available > 0) {
-                                int sent = other.receiveEnergy(Math.min(10, available), false);
-                                if (sent > 0) {
-                                    storage.extractEnergy(sent, false);
-                                    setChanged();
-                                    sync();
-                                }
+        }
+
+        // then push to GIVE or lower-energy neighbors
+        for (Direction dir : Direction.values()) {
+            WireMode mode = modes.get(dir);
+            TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
+            if (neighbor != null) {
+                neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                    if (mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < storage.getEnergyStored())) {
+                        int available = storage.getEnergyStored();
+                        if (available > 0) {
+                            int sent = other.receiveEnergy(Math.min(TRANSFER_RATE, available), false);
+                            if (sent > 0) {
+                                storage.extractEnergy(sent, false);
+                                setChanged();
+                                sync();
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     }

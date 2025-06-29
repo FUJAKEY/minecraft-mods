@@ -13,5 +13,11 @@
   "wiremode.auto": "Auto",
   "wiremode.take": "Take",
   "wiremode.give": "Give",
-  "tooltip.wire.capacity": "10 FE capacity"
+  "direction.north": "North",
+  "direction.south": "South",
+  "direction.east": "East",
+  "direction.west": "West",
+  "direction.up": "Up",
+  "direction.down": "Down",
+  "tooltip.wire.capacity": "1280 FE capacity"
 }
