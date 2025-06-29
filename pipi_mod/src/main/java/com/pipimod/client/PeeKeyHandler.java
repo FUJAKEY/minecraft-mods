@@ -26,8 +26,9 @@ public class PeeKeyHandler {
     public static class ClientEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
+            if (event.phase != TickEvent.Phase.END) return;
             if (delay > 0) delay--;
-            if (PEE_KEY != null && PEE_KEY.isDown()) {
+            if (PEE_KEY != null && PEE_KEY.isDown() && net.minecraft.client.Minecraft.getInstance().player != null) {
                 if (delay == 0) {
                     NetworkHandler.CHANNEL.sendToServer(new PeePacket());
                     delay = 1; // send once every two ticks

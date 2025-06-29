@@ -1,0 +1,8 @@
+{
+  "key.pipimod.pee": "Pee",
+  "commands.bladder.set": "Bladder level set",
+  "commands.bladder.add": "Bladder level increased",
+  "commands.bladder.reduce": "Bladder level decreased",
+  "message.bladder.empty": "Bladder is empty"
+}
+

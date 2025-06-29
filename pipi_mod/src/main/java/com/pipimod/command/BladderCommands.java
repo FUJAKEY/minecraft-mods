@@ -8,7 +8,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -49,19 +49,19 @@ public class BladderCommands {
 
     private static int setLevel(ServerPlayerEntity player, int amount, CommandSource source) {
         player.getCapability(BladderProvider.BLADDER_CAPABILITY).ifPresent(b -> b.setLevel(amount));
-        source.sendSuccess(new StringTextComponent("Уровень мочи установлен"), true);
+        source.sendSuccess(new TranslationTextComponent("commands.bladder.set"), true);
         return 1;
     }
 
     private static int addLevel(ServerPlayerEntity player, int amount, CommandSource source) {
         player.getCapability(BladderProvider.BLADDER_CAPABILITY).ifPresent(b -> b.addLevel(amount));
-        source.sendSuccess(new StringTextComponent("Уровень мочи увеличен"), true);
+        source.sendSuccess(new TranslationTextComponent("commands.bladder.add"), true);
         return 1;
     }
 
     private static int reduceLevel(ServerPlayerEntity player, int amount, CommandSource source) {
         player.getCapability(BladderProvider.BLADDER_CAPABILITY).ifPresent(b -> b.reduceLevel(amount));
-        source.sendSuccess(new StringTextComponent("Уровень мочи уменьшен"), true);
+        source.sendSuccess(new TranslationTextComponent("commands.bladder.reduce"), true);
         return 1;
     }
 }

@@ -1,0 +1,8 @@
+{
+  "key.pipimod.pee": "Писать",
+  "commands.bladder.set": "Уровень мочи установлен",
+  "commands.bladder.add": "Уровень мочи увеличен",
+  "commands.bladder.reduce": "Уровень мочи уменьшен",
+  "message.bladder.empty": "Мочевой пузырь пуст"
+}
+
