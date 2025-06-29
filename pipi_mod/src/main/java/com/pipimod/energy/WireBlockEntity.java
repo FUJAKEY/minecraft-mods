@@ -30,46 +30,46 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public void tick() {
         tickCounter++;
-        if (tickCounter % 2 != 0) return; // 0.1 sec assuming 20 tps
+        if (tickCounter % 2 != 0) return; // run every 0.1 sec
 
-        // First pull energy from TAKE and AUTO sides
-        for (Direction dir : Direction.values()) {
-            WireMode mode = modes.get(dir);
-            if (mode != WireMode.TAKE && mode != WireMode.AUTO) continue;
-            TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-            if (neighbor instanceof IEnergyStorage) {
-                IEnergyStorage other = (IEnergyStorage) neighbor;
-                int wanted = Math.min(10, storage.getMaxEnergyStored() - storage.getEnergyStored());
-                if (mode == WireMode.AUTO && other.getEnergyStored() <= storage.getEnergyStored()) {
-                    wanted = 0;
-                }
-                if (wanted > 0) {
-                    int received = other.extractEnergy(wanted, false);
-                    if (received > 0) {
-                        storage.receiveEnergy(received, false);
-                        setChanged();
-                    }
+        boolean pullPhase = ((tickCounter / 2) % 2) == 0;
+
+        if (pullPhase) {
+            for (Direction dir : Direction.values()) {
+                WireMode mode = modes.get(dir);
+                TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
+                if (neighbor != null) {
+                    neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                        if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > storage.getEnergyStored())) {
+                            int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
+                            if (space > 0) {
+                                int received = other.extractEnergy(Math.min(10, space), false);
+                                if (received > 0) {
+                                    storage.receiveEnergy(received, false);
+                                    setChanged();
+                                }
+                            }
+                        }
+                    });
                 }
             }
-        }
-
-        // Then push energy through GIVE and AUTO sides
-        for (Direction dir : Direction.values()) {
-            WireMode mode = modes.get(dir);
-            if (mode != WireMode.GIVE && mode != WireMode.AUTO) continue;
-            TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-            if (neighbor instanceof IEnergyStorage) {
-                IEnergyStorage other = (IEnergyStorage) neighbor;
-                int toSend = Math.min(10, storage.getEnergyStored());
-                if (mode == WireMode.AUTO && other.getEnergyStored() >= storage.getEnergyStored()) {
-                    toSend = 0;
-                }
-                if (toSend > 0) {
-                    int accepted = other.receiveEnergy(toSend, false);
-                    if (accepted > 0) {
-                        storage.extractEnergy(accepted, false);
-                        setChanged();
-                    }
+        } else { // push phase
+            for (Direction dir : Direction.values()) {
+                WireMode mode = modes.get(dir);
+                TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
+                if (neighbor != null) {
+                    neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                        if (mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < storage.getEnergyStored())) {
+                            int available = storage.getEnergyStored();
+                            if (available > 0) {
+                                int sent = other.receiveEnergy(Math.min(10, available), false);
+                                if (sent > 0) {
+                                    storage.extractEnergy(sent, false);
+                                    setChanged();
+                                }
+                            }
+                        }
+                    });
                 }
             }
         }

@@ -29,6 +29,16 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
+    public void onLoad() {
+        if (capacity == 0 && level != null) {
+            BlockState state = level.getBlockState(worldPosition);
+            if (state.getBlock() instanceof EnergyCellBlock) {
+                setCapacity(((EnergyCellBlock) state.getBlock()).getCapacity());
+            }
+        }
+    }
+
+    @Override
     public void tick() {
     }
 

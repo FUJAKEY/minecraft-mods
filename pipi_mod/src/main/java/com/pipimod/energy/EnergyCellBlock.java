@@ -23,6 +23,10 @@ public class EnergyCellBlock extends Block {
         this.capacity = capacity;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
