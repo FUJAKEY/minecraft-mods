@@ -50,42 +50,36 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // pull from neighbors with more energy
+        // pull from neighbors first
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            int diff = other.getEnergyStored() - this.getEnergyStored();
-            if (diff <= 0) continue;
-            if (mode == WireMode.TAKE || (mode == WireMode.AUTO && diff > 0)) {
-                int amount = Math.min(TRANSFER_RATE, diff / 2);
-                if (amount > 0) {
-                    // Only pull as much as this wire can actually store
-                    int toReceive = storage.receiveEnergy(amount, true);
-                    if (toReceive > 0) {
-                        int pulled = other.extractEnergy(toReceive, false);
-                        if (pulled > 0) {
-                            storage.receiveEnergy(pulled, false);
-                        }
+            if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored())) {
+                int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
+                if (space <= 0) continue;
+                int toPull = Math.min(TRANSFER_RATE, space);
+                int available = other.extractEnergy(toPull, true);
+                if (available > 0) {
+                    int pulled = other.extractEnergy(available, false);
+                    if (pulled > 0) {
+                        storage.receiveEnergy(pulled, false);
                     }
                 }
             }
         }
 
-        // push to neighbors with less energy
+        // then push out energy
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            int diff = this.getEnergyStored() - other.getEnergyStored();
-            if (diff <= 0) continue;
-            if (mode == WireMode.GIVE || (mode == WireMode.AUTO && diff > 0)) {
-                int amount = Math.min(TRANSFER_RATE, diff / 2);
-                if (amount > 0) {
-                    int sent = other.receiveEnergy(amount, false);
-                    if (sent > 0) {
-                        storage.extractEnergy(sent, false);
-                    }
+            if (mode == WireMode.GIVE || (mode == WireMode.AUTO && this.getEnergyStored() > other.getEnergyStored())) {
+                int available = Math.min(TRANSFER_RATE, storage.getEnergyStored());
+                if (available <= 0) continue;
+                int sent = other.receiveEnergy(available, false);
+                if (sent > 0) {
+                    storage.extractEnergy(sent, false);
                 }
             }
         }
