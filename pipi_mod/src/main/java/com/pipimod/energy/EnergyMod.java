@@ -8,6 +8,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 @Mod(EnergyMod.MODID)
 public class EnergyMod {
@@ -36,5 +37,8 @@ public class EnergyMod {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         net.minecraft.client.gui.ScreenManager.register(ModContainers.METAL_FILLER.get(), MetalFillerScreen::new);
+        event.enqueueWork(() -> {
+            net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEntityRenderer(ModTileEntities.WIND_TURBINE.get(), WindTurbineRenderer::new);
+        });
     }
 }
