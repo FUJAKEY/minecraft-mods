@@ -1,6 +1,6 @@
 {
-  "parent": "energymod:block/energy_cell",
+  "parent": "block/cube_all",
   "textures": {
-    "all": "energymod:block/black"
+    "all": "energymod:block/metal_filler"
   }
 }

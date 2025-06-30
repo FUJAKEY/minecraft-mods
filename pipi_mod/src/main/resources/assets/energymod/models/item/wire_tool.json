@@ -1,3 +1,6 @@
 {
-  "parent": "energymod:block/energy_cell"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "energymod:item/wire_tool"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "energymod:block/black"
+    "all": "energymod:block/energy_cell_sr"
   }
 }

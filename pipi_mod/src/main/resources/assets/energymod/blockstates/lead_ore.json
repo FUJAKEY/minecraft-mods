@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "energymod:block/ore" }
+    "": { "model": "energymod:block/lead_ore" }
   }
 }
