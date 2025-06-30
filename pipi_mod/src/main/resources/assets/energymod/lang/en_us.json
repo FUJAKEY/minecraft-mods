@@ -30,5 +30,9 @@
   "item.energymod.osmium_ingot": "Osmium Ingot",
   "block.energymod.metal_filler": "Metal Filler",
   "container.energymod.metal_filler": "Metal Filler",
-  "item.energymod.cast_iron_ingot": "Cast Iron Ingot"
+  "item.energymod.cast_iron_ingot": "Cast Iron Ingot",
+  "itemGroup.energymod_generators": "Energy Generator",
+  "block.energymod.thermal_generator": "Thermal Generator",
+  "block.energymod.solar_panel": "Solar Panel",
+  "block.energymod.wind_turbine": "Wind Turbine"
 }

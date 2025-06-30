@@ -17,6 +17,9 @@ public class ModItems {
     public static final RegistryObject<Item> ENERGY_WIRE_ITEM = ITEMS.register("energy_wire", () -> new WireItem(ModBlocks.ENERGY_WIRE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> WIRE_TOOL = ITEMS.register("wire_tool", () -> new WireToolItem(new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> METAL_FILLER_ITEM = ITEMS.register("metal_filler", () -> new BlockItem(ModBlocks.METAL_FILLER.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
+    public static final RegistryObject<Item> THERMAL_GENERATOR = ITEMS.register("thermal_generator", () -> new BlockItem(ModBlocks.THERMAL_GENERATOR.get(), new Item.Properties().tab(ModItemGroup.GENERATORS)));
+    public static final RegistryObject<Item> SOLAR_PANEL = ITEMS.register("solar_panel", () -> new BlockItem(ModBlocks.SOLAR_PANEL.get(), new Item.Properties().tab(ModItemGroup.GENERATORS)));
+    public static final RegistryObject<Item> WIND_TURBINE = ITEMS.register("wind_turbine", () -> new BlockItem(ModBlocks.WIND_TURBINE.get(), new Item.Properties().tab(ModItemGroup.GENERATORS)));
 
     public static final RegistryObject<Item> COPPER_ORE_ITEM = ITEMS.register("copper_ore", () -> new BlockItem(ModBlocks.COPPER_ORE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> LEAD_ORE_ITEM = ITEMS.register("lead_ore", () -> new BlockItem(ModBlocks.LEAD_ORE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));

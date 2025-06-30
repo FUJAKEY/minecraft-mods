@@ -3,6 +3,9 @@ package com.pipimod.energy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.RegistryObject;
+import com.pipimod.energy.ThermalGeneratorBlock;
+import com.pipimod.energy.SolarPanelBlock;
+import com.pipimod.energy.WindTurbineBlock;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.common.ToolType;
@@ -16,6 +19,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> ENERGY_CELL_INF = BLOCKS.register("energy_cell_inf", () -> new InfiniteEnergyCellBlock());
     public static final RegistryObject<Block> ENERGY_WIRE = BLOCKS.register("energy_wire", EnergyWireBlock::new);
     public static final RegistryObject<Block> METAL_FILLER = BLOCKS.register("metal_filler", MetalFillerBlock::new);
+    public static final RegistryObject<Block> THERMAL_GENERATOR = BLOCKS.register("thermal_generator", ThermalGeneratorBlock::new);
+    public static final RegistryObject<Block> SOLAR_PANEL = BLOCKS.register("solar_panel", SolarPanelBlock::new);
+    public static final RegistryObject<Block> WIND_TURBINE = BLOCKS.register("wind_turbine", WindTurbineBlock::new);
 
     public static final RegistryObject<Block> COPPER_ORE = BLOCKS.register("copper_ore", () ->
             new Block(Block.Properties.of(Material.STONE)
