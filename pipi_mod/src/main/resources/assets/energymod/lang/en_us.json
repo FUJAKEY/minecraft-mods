@@ -29,5 +29,6 @@
   "item.energymod.lead_ingot": "Lead Ingot",
   "item.energymod.osmium_ingot": "Osmium Ingot",
   "block.energymod.metal_filler": "Metal Filler",
+  "container.energymod.metal_filler": "Metal Filler",
   "item.energymod.cast_iron_ingot": "Cast Iron Ingot"
 }

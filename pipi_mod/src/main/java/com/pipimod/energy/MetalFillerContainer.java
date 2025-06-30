@@ -25,9 +25,12 @@ public class MetalFillerContainer extends Container {
         this.data = data;
         inv.startOpen(player.player);
 
-        this.addSlot(new Slot(inv, 0, 56, 17));
-        this.addSlot(new Slot(inv, 1, 56, 53));
-        this.addSlot(new Slot(inv, 2, 116, 35) {
+        // fuel slot (coal) on the left
+        this.addSlot(new Slot(inv, 0, 26, 35));
+        // iron input in the center
+        this.addSlot(new Slot(inv, 1, 80, 35));
+        // output on the right
+        this.addSlot(new Slot(inv, 2, 134, 35) {
             @Override
             public boolean mayPlace(net.minecraft.item.ItemStack stack) { return false; }
         });

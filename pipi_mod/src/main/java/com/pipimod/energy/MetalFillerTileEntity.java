@@ -115,7 +115,7 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
 
     @Override
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.energymod.metal_filler");
+        return new TranslationTextComponent("container.energymod.metal_filler");
     }
 
     @Override

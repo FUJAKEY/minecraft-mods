@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "textures/gui/container/furnace.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "textures/gui/container/hopper.png");
 
     public MetalFillerScreen(MetalFillerContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
@@ -21,12 +21,12 @@ public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
         blit(stack, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
         int k = this.menu.getProgress() * 24 / 100;
-        blit(stack, x + 79, y + 34, 176, 14, k + 1, 16);
+        blit(stack, x + 100, y + 34, 176, 14, k + 1, 16);
 
         int carbon = this.menu.getCarbon() * 14 / 500;
-        blit(stack, x + 43, y + 36 - carbon, 176, 0, 14, carbon);
+        blit(stack, x + 8, y + 36 - carbon, 176, 0, 14, carbon);
 
         int energy = Math.min(14, this.menu.getEnergy() * 14 / 10000);
-        blit(stack, x + 150, y + 36 - energy, 176, 0, 14, energy);
+        blit(stack, x + 154, y + 36 - energy, 176, 0, 14, energy);
     }
 }
