@@ -13,6 +13,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity> {
     private final ResourceLocation ROTOR_MODEL = new ResourceLocation(EnergyMod.MODID, "block/wind_turbine_rotor");
+    private final ResourceLocation TOWER_MODEL = new ResourceLocation(EnergyMod.MODID, "block/wind_turbine_tower");
 
     public WindTurbineRenderer(TileEntityRendererDispatcher d) {
         super(d);
@@ -21,14 +22,17 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
     @Override
     public void render(WindTurbineTileEntity tile, float partialTicks, MatrixStack stack,
                         IRenderTypeBuffer buffer, int light, int overlay) {
-        IBakedModel model = Minecraft.getInstance().getModelManager().getModel(ROTOR_MODEL);
+        IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+        IBakedModel tower = Minecraft.getInstance().getModelManager().getModel(TOWER_MODEL);
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(stack.last(), vb, null, tower, 1,1,1, light, overlay);
+
+        IBakedModel rotor = Minecraft.getInstance().getModelManager().getModel(ROTOR_MODEL);
         float angle = tile.getRotation() + partialTicks * 9f;
         stack.pushPose();
         stack.translate(0.5, 2.75, 0.5);
         stack.mulPose(Vector3f.YP.rotationDegrees(angle));
         stack.translate(-0.5, -2.75, -0.5);
-        IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(stack.last(), vb, null, model, 1,1,1, light, overlay);
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(stack.last(), vb, null, rotor, 1,1,1, light, overlay);
         stack.popPose();
     }
 }

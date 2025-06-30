@@ -16,7 +16,7 @@ public class WindTurbineTileEntity extends GeneratorTileEntity {
     @Override
     public void tick() {
         super.tick();
-        if (level != null && !level.isClientSide) {
+        if (level != null) {
             rotation = (rotation + 9f) % 360f;
         }
     }

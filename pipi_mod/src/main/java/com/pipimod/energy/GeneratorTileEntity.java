@@ -10,6 +10,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraft.util.Direction;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.block.BlockState;
 
 public abstract class GeneratorTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
@@ -19,7 +21,7 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
 
     protected GeneratorTileEntity(int capacity, int rate, TileEntityType<?> type) {
         super(type);
-        this.storage = new EnergyStorage(capacity, capacity, 0);
+        this.storage = new EnergyStorage(capacity, capacity, capacity);
         this.generateRate = rate;
     }
 
@@ -43,6 +45,26 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
                 }
             }
         }
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return save(new CompoundNBT());
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        load(state, tag);
+    }
+
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
     @Override
