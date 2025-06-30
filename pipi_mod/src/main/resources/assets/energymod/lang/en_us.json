@@ -21,5 +21,11 @@
   "direction.down": "Down",
   "tooltip.wire.capacity": "1280 FE capacity",
   "screen.energymod.facing": "Facing: %s",
-  "screen.energymod.title": "Wire Configuration"
+  "screen.energymod.title": "Wire Configuration",
+  "block.energymod.copper_ore": "Copper Ore",
+  "block.energymod.lead_ore": "Lead Ore",
+  "block.energymod.osmium_ore": "Osmium Ore",
+  "item.energymod.copper_ingot": "Copper Ingot",
+  "item.energymod.lead_ingot": "Lead Ingot",
+  "item.energymod.osmium_ingot": "Osmium Ingot"
 }

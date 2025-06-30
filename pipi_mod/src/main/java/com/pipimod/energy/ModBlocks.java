@@ -14,4 +14,11 @@ public class ModBlocks {
     public static final RegistryObject<Block> ENERGY_CELL_MX = BLOCKS.register("energy_cell_mx", () -> new EnergyCellBlock(10000000));
     public static final RegistryObject<Block> ENERGY_CELL_INF = BLOCKS.register("energy_cell_inf", () -> new InfiniteEnergyCellBlock());
     public static final RegistryObject<Block> ENERGY_WIRE = BLOCKS.register("energy_wire", EnergyWireBlock::new);
+
+    public static final RegistryObject<Block> COPPER_ORE = BLOCKS.register("copper_ore", () ->
+            new Block(Block.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> LEAD_ORE = BLOCKS.register("lead_ore", () ->
+            new Block(Block.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> OSMIUM_ORE = BLOCKS.register("osmium_ore", () ->
+            new Block(Block.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops()));
 }

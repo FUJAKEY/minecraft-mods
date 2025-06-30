@@ -30,6 +30,7 @@ public class EnergyMod {
 
     private void setup(final FMLCommonSetupEvent event) {
         CHANNEL.registerMessage(0, SetWireModePacket.class, SetWireModePacket::encode, SetWireModePacket::decode, SetWireModePacket::handle);
+        ModWorldGen.setup(event);
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {

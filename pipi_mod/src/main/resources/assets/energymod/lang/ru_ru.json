@@ -21,5 +21,11 @@
   "direction.down": "Вниз",
   "tooltip.wire.capacity": "Вместимость 1280 FE",
   "screen.energymod.facing": "Направление: %s",
-  "screen.energymod.title": "Настройка провода"
+  "screen.energymod.title": "Настройка провода",
+  "block.energymod.copper_ore": "Медная руда",
+  "block.energymod.lead_ore": "Свинцовая руда",
+  "block.energymod.osmium_ore": "Осмиевая руда",
+  "item.energymod.copper_ingot": "Медный слиток",
+  "item.energymod.lead_ingot": "Свинцовый слиток",
+  "item.energymod.osmium_ingot": "Осмиевый слиток"
 }
