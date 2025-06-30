@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "energymod:block/wind_turbine" }
+    "part=base": { "model": "energymod:block/wind_turbine" },
+    "part=middle": { "model": "energymod:block/wind_turbine_middle" },
+    "part=top": { "model": "energymod:block/wind_turbine_top" }
   }
 }
