@@ -60,9 +60,13 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             if (mode == WireMode.TAKE || (mode == WireMode.AUTO && diff > 0)) {
                 int amount = Math.min(TRANSFER_RATE, diff / 2);
                 if (amount > 0) {
-                    int pulled = other.extractEnergy(amount, false);
-                    if (pulled > 0) {
-                        storage.receiveEnergy(pulled, false);
+                    // Only pull as much as this wire can actually store
+                    int toReceive = storage.receiveEnergy(amount, true);
+                    if (toReceive > 0) {
+                        int pulled = other.extractEnergy(toReceive, false);
+                        if (pulled > 0) {
+                            storage.receiveEnergy(pulled, false);
+                        }
                     }
                 }
             }
