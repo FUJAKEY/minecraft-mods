@@ -10,6 +10,11 @@ public class ThermalGeneratorTileEntity extends GeneratorTileEntity {
     }
 
     @Override
+    protected boolean canGenerate() {
+        return level != null && !level.isRainingAt(worldPosition);
+    }
+
+    @Override
     public int getEfficiency() {
         if (level == null) return 0;
         net.minecraft.world.biome.Biome biome = level.getBiome(worldPosition);

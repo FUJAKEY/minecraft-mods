@@ -35,10 +35,18 @@
   "itemGroup.energymod_generators": "Генераторы энергии",
   "block.energymod.thermal_generator": "Теплогенератор",
   "block.energymod.solar_panel": "Солнечная панель",
-  "block.energymod.wind_turbine": "Ветрогенератор"
-  ,"book.energymod.wiki.title": "Вики Energy Mod"
-  ,"book.energymod.wiki.author": "EnergyMod"
-  ,"book.energymod.wiki.page1": "Хранилища сохраняют FE, провода передают её. Режимы проводов переключаются инструментом."
-  ,"book.energymod.wiki.page2": "Рецепт провода: три медных слитка и один свинцовый = 4 провода. Генераторы вырабатывают FE."
-  ,"message.energymod.efficiency": "Эффективность: %s%%"
+  "block.energymod.wind_turbine": "Ветрогенератор",
+  "book.energymod.wiki.title": "Вики Energy Mod",
+  "book.energymod.wiki.author": "EnergyMod",
+  "book.energymod.wiki.page1": "Хранилища сохраняют FE, провода передают её. Режимы проводов переключаются инструментом.",
+  "book.energymod.wiki.page2": "Рецепт провода: три медных слитка и один свинцовый = 4 провода. Генераторы вырабатывают FE.",
+  "message.energymod.efficiency": "Эффективность: %s%%",
+  "book.energymod.wiki.page3": "Режимы проводов: TAKE, GIVE и DISABLED. Авто режим берёт энергию с генераторов.",
+  "book.energymod.wiki.page4": "Ячейки большего уровня хранят 100k, 1M и 10M FE соответственно.",
+  "book.energymod.wiki.page5": "Бесконечная ячейка сразу заряжена и выдаёт бесконечную энергию.",
+  "book.energymod.wiki.page6": "Солнечные панели работают только днём и не работают под дождём.",
+  "book.energymod.wiki.page7": "Теплогенератор зависит от температуры биома и лавы рядом.",
+  "book.energymod.wiki.page8": "Ветрогенераторы эффективнее высоко и в грозу крутятся быстрее.",
+  "book.energymod.wiki.page9": "Металлургический наполнитель создаёт чугун из железа и угля.",
+  "book.energymod.wiki.page10": "Все блоки совместимы с энергией Forge и Mekanism."
 }

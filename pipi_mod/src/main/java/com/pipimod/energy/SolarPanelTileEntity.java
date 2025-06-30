@@ -9,7 +9,8 @@ public class SolarPanelTileEntity extends GeneratorTileEntity {
 
     @Override
     protected boolean canGenerate() {
-        return level != null && level.canSeeSky(worldPosition.above()) && level.isDay();
+        return level != null && level.canSeeSky(worldPosition.above()) && level.isDay()
+                && !level.isRainingAt(worldPosition.above());
     }
 
     @Override

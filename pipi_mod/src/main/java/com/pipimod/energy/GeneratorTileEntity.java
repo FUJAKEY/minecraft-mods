@@ -72,7 +72,17 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
 
     // IEnergyStorage
     @Override public int receiveEnergy(int maxReceive, boolean simulate) { return 0; }
-    @Override public int extractEnergy(int maxExtract, boolean simulate) { return storage.extractEnergy(maxExtract, simulate); }
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        int e = storage.extractEnergy(maxExtract, simulate);
+        if (!simulate && e > 0) {
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        }
+        return e;
+    }
     @Override public int getEnergyStored() { return storage.getEnergyStored(); }
     @Override public int getMaxEnergyStored() { return storage.getMaxEnergyStored(); }
     @Override public boolean canExtract() { return true; }

@@ -29,8 +29,10 @@ public class ModCommands {
                 tag.putString("title", new TranslationTextComponent("book.energymod.wiki.title").getString());
                 tag.putString("author", new TranslationTextComponent("book.energymod.wiki.author").getString());
                 ListNBT pages = new ListNBT();
-                pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new TranslationTextComponent("book.energymod.wiki.page1"))));
-                pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new TranslationTextComponent("book.energymod.wiki.page2"))));
+                for (int i = 1; i <= 10; i++) {
+                    pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(
+                            new TranslationTextComponent("book.energymod.wiki.page" + i))));
+                }
                 tag.put("pages", pages);
                 book.setTag(tag);
                 if (!player.addItem(book)) {

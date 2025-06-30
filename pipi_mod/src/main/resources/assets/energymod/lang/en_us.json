@@ -39,6 +39,14 @@
   ,"book.energymod.wiki.title": "Energy Mod Wiki"
   ,"book.energymod.wiki.author": "EnergyMod"
   ,"book.energymod.wiki.page1": "Energy cells store FE. Use wires to transfer energy. Toggle modes with the Wire Tool."
-  ,"book.energymod.wiki.page2": "Wire recipe: three copper ingots and one lead ingot = 4 wires. Generators produce FE."
-  ,"message.energymod.efficiency": "Efficiency: %s%%"
+  ,"book.energymod.wiki.page2": "Wire recipe: three copper ingots and one lead ingot = 4 wires. Generators produce FE.",
+  "book.energymod.wiki.page3": "Wires have TAKE, GIVE and DISABLED modes. Auto mode pulls from generators automatically.",
+  "book.energymod.wiki.page4": "Energy cells of higher tier hold more FE: 100k, 1M and 10M respectively.",
+  "book.energymod.wiki.page5": "Infinite cells start filled and supply endless FE for testing machines.",
+  "book.energymod.wiki.page6": "Solar panels work only during the day and stop when it rains.",
+  "book.energymod.wiki.page7": "Thermal generators depend on biome temperature and nearby lava.",
+  "book.energymod.wiki.page8": "Wind turbines produce power high above ground and spin faster in storms.",
+  "book.energymod.wiki.page9": "Use the Metal Filler to craft cast iron with coal and FE.",
+  "book.energymod.wiki.page10": "All blocks support Forge and Mekanism energy capabilities for compatibility.",
+  "message.energymod.efficiency": "Efficiency: %s%%"
 }
