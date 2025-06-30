@@ -36,6 +36,5 @@ public class EnergyMod {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         net.minecraft.client.gui.ScreenManager.register(ModContainers.METAL_FILLER.get(), MetalFillerScreen::new);
-        net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEntityRenderer(ModTileEntities.WIND_TURBINE.get(), WindTurbineRenderer::new);
     }
 }
