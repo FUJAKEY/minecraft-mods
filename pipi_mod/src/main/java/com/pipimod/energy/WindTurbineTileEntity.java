@@ -25,7 +25,8 @@ public class WindTurbineTileEntity extends GeneratorTileEntity {
     public void tick() {
         super.tick();
         if (level != null && level.isClientSide) {
-            rotation = (rotation + 9f) % 360f;
+            float speed = 9f * getEfficiency() / 100f;
+            rotation = (rotation + speed) % 360f;
         }
     }
 }
