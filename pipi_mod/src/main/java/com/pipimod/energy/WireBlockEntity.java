@@ -38,8 +38,9 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public void tick() {
-        int receivedTotal = 0;
-        int sentTotal = 0;
+        if (level == null || level.isClientSide) return;
+
+        int before = storage.getEnergyStored();
 
         EnumMap<Direction, IEnergyStorage> neighbors = new EnumMap<>(Direction.class);
         for (Direction dir : Direction.values()) {
@@ -49,39 +50,43 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // pull energy first
+        // pull from neighbors with more energy
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            boolean canPull = mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
-            if (canPull && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
-                int request = Math.min(TRANSFER_RATE, storage.getMaxEnergyStored() - storage.getEnergyStored());
-                int pulled = other.extractEnergy(request, false);
-                if (pulled > 0) {
-                    storage.receiveEnergy(pulled, false);
-                    receivedTotal += pulled;
+            int diff = other.getEnergyStored() - this.getEnergyStored();
+            if (diff <= 0) continue;
+            if (mode == WireMode.TAKE || (mode == WireMode.AUTO && diff > 0)) {
+                int amount = Math.min(TRANSFER_RATE, diff / 2);
+                if (amount > 0) {
+                    int pulled = other.extractEnergy(amount, false);
+                    if (pulled > 0) {
+                        storage.receiveEnergy(pulled, false);
+                    }
                 }
             }
         }
 
-        // then push energy
+        // push to neighbors with less energy
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            boolean canSend = mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < this.getEnergyStored());
-            if (canSend && storage.getEnergyStored() > 0) {
-                int toSend = Math.min(TRANSFER_RATE, storage.getEnergyStored());
-                int sent = other.receiveEnergy(toSend, false);
-                if (sent > 0) {
-                    storage.extractEnergy(sent, false);
-                    sentTotal += sent;
+            int diff = this.getEnergyStored() - other.getEnergyStored();
+            if (diff <= 0) continue;
+            if (mode == WireMode.GIVE || (mode == WireMode.AUTO && diff > 0)) {
+                int amount = Math.min(TRANSFER_RATE, diff / 2);
+                if (amount > 0) {
+                    int sent = other.receiveEnergy(amount, false);
+                    if (sent > 0) {
+                        storage.extractEnergy(sent, false);
+                    }
                 }
             }
         }
 
-        if (receivedTotal > 0 || sentTotal > 0) {
+        if (storage.getEnergyStored() != before) {
             setChanged();
             sync();
         }
