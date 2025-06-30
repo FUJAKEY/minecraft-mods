@@ -11,6 +11,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -54,8 +56,14 @@ public class EnergyWireBlock extends Block {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = this.defaultBlockState();
         for (Direction dir : Direction.values()) {
-            BlockState neighbor = context.getLevel().getBlockState(context.getClickedPos().relative(dir));
-            if (neighbor.getBlock() instanceof EnergyWireBlock || neighbor.getBlock() instanceof EnergyCellBlock) {
+            BlockPos np = context.getClickedPos().relative(dir);
+            BlockState neighbor = context.getLevel().getBlockState(np);
+            boolean connects = neighbor.getBlock() instanceof EnergyWireBlock || neighbor.getBlock() instanceof EnergyCellBlock;
+            if (!connects) {
+                TileEntity te = context.getLevel().getBlockEntity(np);
+                connects = te != null && te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).isPresent();
+            }
+            if (connects) {
                 state = state.setValue(getProperty(dir), true);
             }
         }
@@ -65,6 +73,10 @@ public class EnergyWireBlock extends Block {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, IWorld world, BlockPos currentPos, BlockPos neighborPos) {
         boolean connected = neighborState.getBlock() instanceof EnergyWireBlock || neighborState.getBlock() instanceof EnergyCellBlock;
+        if (!connected) {
+            TileEntity te = world.getBlockEntity(neighborPos);
+            connected = te != null && te.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).isPresent();
+        }
         return state.setValue(getProperty(direction), connected);
     }
 

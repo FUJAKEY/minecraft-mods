@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class WireConfigScreen extends Screen {
     private final BlockPos pos;
@@ -42,10 +43,23 @@ public class WireConfigScreen extends Screen {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
+        fillGradient(stack, 0, 0, this.width, this.height, 0xC0101010, 0xD0101010);
         super.render(stack, mouseX, mouseY, partialTicks);
-        String facing = Minecraft.getInstance().player.getDirection().getSerializedName();
-        String text = new net.minecraft.util.text.TranslationTextComponent("screen.energymod.facing", facing).getString();
-        this.font.draw(stack, text, this.width/2f - this.font.width(text)/2f, 20, 0xFFFFFF);
+
+        Direction facing = Minecraft.getInstance().player.getDirection();
+        Direction left = facing.getCounterClockWise();
+        Direction right = facing.getClockWise();
+        Direction back = facing.getOpposite();
+
+        String top = new TranslationTextComponent("direction." + facing.getSerializedName()).getString();
+        String leftText = new TranslationTextComponent("direction." + left.getSerializedName()).getString();
+        String rightText = new TranslationTextComponent("direction." + right.getSerializedName()).getString();
+        String bottom = new TranslationTextComponent("direction." + back.getSerializedName()).getString();
+
+        this.font.draw(stack, top, this.width/2f - this.font.width(top)/2f, 10, 0xFFFFFF);
+        this.font.draw(stack, leftText, 5, this.height/2f - this.font.lineHeight/2f, 0xFFFFFF);
+        this.font.draw(stack, rightText, this.width - 5 - this.font.width(rightText), this.height/2f - this.font.lineHeight/2f, 0xFFFFFF);
+        this.font.draw(stack, bottom, this.width/2f - this.font.width(bottom)/2f, this.height - 10 - this.font.lineHeight, 0xFFFFFF);
     }
 
     @Override
