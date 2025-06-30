@@ -50,18 +50,16 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // pull from neighbors first
+        // pull energy from TAKE sides or neighbours with more FE
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored())) {
+            boolean shouldPull = mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
+            if (shouldPull) {
                 int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
-                if (space <= 0) continue;
-                int toPull = Math.min(TRANSFER_RATE, space);
-                int available = other.extractEnergy(toPull, true);
-                if (available > 0) {
-                    int pulled = other.extractEnergy(available, false);
+                if (space > 0) {
+                    int pulled = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
                     if (pulled > 0) {
                         storage.receiveEnergy(pulled, false);
                     }
@@ -69,17 +67,19 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // then push out energy
+        // push energy towards GIVE sides or neighbours with less FE
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            if (mode == WireMode.GIVE || (mode == WireMode.AUTO && this.getEnergyStored() > other.getEnergyStored())) {
+            boolean shouldPush = mode == WireMode.GIVE || (mode == WireMode.AUTO && this.getEnergyStored() > other.getEnergyStored());
+            if (shouldPush) {
                 int available = Math.min(TRANSFER_RATE, storage.getEnergyStored());
-                if (available <= 0) continue;
-                int sent = other.receiveEnergy(available, false);
-                if (sent > 0) {
-                    storage.extractEnergy(sent, false);
+                if (available > 0) {
+                    int sent = other.receiveEnergy(available, false);
+                    if (sent > 0) {
+                        storage.extractEnergy(sent, false);
+                    }
                 }
             }
         }
