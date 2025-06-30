@@ -25,9 +25,9 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         IBakedModel rotor = Minecraft.getInstance().getModelManager().getModel(ROTOR_MODEL);
         float angle = tile.getRotation() + partialTicks * 9f;
         stack.pushPose();
-        stack.translate(0.5, 2.75, 0.5);
+        stack.translate(0.5, 3.0625, 0.5);
         stack.mulPose(Vector3f.YP.rotationDegrees(angle));
-        stack.translate(-0.5, -2.75, -0.5);
+        stack.translate(-0.5, -3.0625, -0.5);
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(stack.last(), vb, null, rotor, 1,1,1, light, overlay);
         stack.popPose();
     }
