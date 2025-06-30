@@ -6,13 +6,12 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.placement.TopSolidRangeConfig;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = EnergyMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModWorldGen {
     private static ConfiguredFeature<?, ?> COPPER_ORE;
     private static ConfiguredFeature<?, ?> LEAD_ORE;
@@ -37,8 +36,6 @@ public class ModWorldGen {
                 .decorated(Placement.RANGE.configured(new TopSolidRangeConfig(1, 0, 30)))
                 .squared()
                 .count(20);
-
-        MinecraftForge.EVENT_BUS.register(ModWorldGen.class);
     }
 
     @SubscribeEvent
