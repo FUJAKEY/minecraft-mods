@@ -49,12 +49,14 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // pull phase
+        boolean hasTake = modes.containsValue(WireMode.TAKE);
+
+        // pull from TAKE sides and auto sides when not driven by other takes
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            boolean canPull = mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
+            boolean canPull = mode == WireMode.TAKE || (!hasTake && mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
             if (canPull && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
                 int request = Math.min(TRANSFER_RATE, storage.getMaxEnergyStored() - storage.getEnergyStored());
                 int pulled = other.extractEnergy(request, false);
@@ -65,12 +67,12 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // push phase
+        // push energy to GIVE sides and AUTO sides when there was a TAKE
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-            boolean canSend = mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < this.getEnergyStored());
+            boolean canSend = mode == WireMode.GIVE || (mode == WireMode.AUTO && (hasTake || other.getEnergyStored() < this.getEnergyStored()));
             if (canSend && storage.getEnergyStored() > 0) {
                 int toSend = Math.min(TRANSFER_RATE, storage.getEnergyStored());
                 int sent = other.receiveEnergy(toSend, false);
