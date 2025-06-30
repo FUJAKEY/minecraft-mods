@@ -1,3 +1,3 @@
 {
-  "parent": "energymod:block/wind_turbine"
+  "parent": "energymod:block/wind_turbine_tower"
 }

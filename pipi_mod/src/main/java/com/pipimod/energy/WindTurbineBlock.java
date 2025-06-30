@@ -37,9 +37,9 @@ public class WindTurbineBlock extends Block {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
     private static final VoxelShape BASE_SHAPE = Block.box(0, 0, 0, 16, 16, 16);
-    private static final VoxelShape MIDDLE_SHAPE = Block.box(5, 0, 5, 11, 16, 11);
+    private static final VoxelShape MIDDLE_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
     private static final VoxelShape TOP_SHAPE = VoxelShapes.or(
-            Block.box(7, 0, 7, 9, 16, 9),
+            Block.box(4, 0, 4, 12, 16, 12),
             Block.box(0, 14, 7, 16, 16, 9),
             Block.box(7, 14, 0, 9, 16, 16)
     );
