@@ -15,6 +15,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> ENERGY_CELL_MX = BLOCKS.register("energy_cell_mx", () -> new EnergyCellBlock(10000000));
     public static final RegistryObject<Block> ENERGY_CELL_INF = BLOCKS.register("energy_cell_inf", () -> new InfiniteEnergyCellBlock());
     public static final RegistryObject<Block> ENERGY_WIRE = BLOCKS.register("energy_wire", EnergyWireBlock::new);
+    public static final RegistryObject<Block> METAL_FILLER = BLOCKS.register("metal_filler", MetalFillerBlock::new);
 
     public static final RegistryObject<Block> COPPER_ORE = BLOCKS.register("copper_ore", () ->
             new Block(Block.Properties.of(Material.STONE)

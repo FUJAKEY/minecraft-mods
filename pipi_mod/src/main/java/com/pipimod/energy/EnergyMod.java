@@ -25,6 +25,7 @@ public class EnergyMod {
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModTileEntities.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModContainers.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -34,5 +35,6 @@ public class EnergyMod {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
+        net.minecraft.client.gui.ScreenManager.register(ModContainers.METAL_FILLER.get(), MetalFillerScreen::new);
     }
 }

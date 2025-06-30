@@ -27,5 +27,7 @@
   "block.energymod.osmium_ore": "Осмиевая руда",
   "item.energymod.copper_ingot": "Медный слиток",
   "item.energymod.lead_ingot": "Свинцовый слиток",
-  "item.energymod.osmium_ingot": "Осмиевый слиток"
+  "item.energymod.osmium_ingot": "Осмиевый слиток",
+  "block.energymod.metal_filler": "Металлургический наполнитель",
+  "item.energymod.cast_iron_ingot": "Чугунный слиток"
 }

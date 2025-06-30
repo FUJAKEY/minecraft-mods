@@ -16,6 +16,7 @@ public class ModItems {
     public static final RegistryObject<Item> ENERGY_CELL_INF_ITEM = ITEMS.register("energy_cell_inf", () -> new EnergyCellItem(ModBlocks.ENERGY_CELL_INF.get(), new Item.Properties().tab(ModItemGroup.GROUP), Integer.MAX_VALUE));
     public static final RegistryObject<Item> ENERGY_WIRE_ITEM = ITEMS.register("energy_wire", () -> new WireItem(ModBlocks.ENERGY_WIRE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> WIRE_TOOL = ITEMS.register("wire_tool", () -> new WireToolItem(new Item.Properties().tab(ModItemGroup.GROUP)));
+    public static final RegistryObject<Item> METAL_FILLER_ITEM = ITEMS.register("metal_filler", () -> new BlockItem(ModBlocks.METAL_FILLER.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
 
     public static final RegistryObject<Item> COPPER_ORE_ITEM = ITEMS.register("copper_ore", () -> new BlockItem(ModBlocks.COPPER_ORE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> LEAD_ORE_ITEM = ITEMS.register("lead_ore", () -> new BlockItem(ModBlocks.LEAD_ORE.get(), new Item.Properties().tab(ModItemGroup.GROUP)));
@@ -24,4 +25,5 @@ public class ModItems {
     public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", () -> new Item(new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> LEAD_INGOT = ITEMS.register("lead_ingot", () -> new Item(new Item.Properties().tab(ModItemGroup.GROUP)));
     public static final RegistryObject<Item> OSMIUM_INGOT = ITEMS.register("osmium_ingot", () -> new Item(new Item.Properties().tab(ModItemGroup.GROUP)));
+    public static final RegistryObject<Item> CAST_IRON_INGOT = ITEMS.register("cast_iron_ingot", () -> new Item(new Item.Properties().tab(ModItemGroup.GROUP)));
 }

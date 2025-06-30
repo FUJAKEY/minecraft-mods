@@ -94,20 +94,25 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-        // Push to GIVE and AUTO outputs
+        // Gather all output targets
+        java.util.List<IEnergyStorage> outputs = new java.util.ArrayList<>();
         for (WireBlockEntity w : network) {
             for (Direction dir : Direction.values()) {
-                WireMode mode = w.modes.get(dir);
-                if (mode == WireMode.TAKE) continue;
+                if (w.modes.get(dir) == WireMode.TAKE) continue;
                 TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
                 if (te != null && !(te instanceof WireBlockEntity)) {
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
-                    if (cap != null && totalEnergy > 0) {
-                        int sent = cap.receiveEnergy(Math.min(TRANSFER_RATE, totalEnergy), false);
-                        totalEnergy -= sent;
-                    }
+                    if (cap != null) outputs.add(cap);
                 }
             }
+        }
+
+        // Distribute energy fairly between outputs
+        for (int i = 0; i < outputs.size() && totalEnergy > 0; i++) {
+            IEnergyStorage cap = outputs.get(i);
+            int share = Math.min(TRANSFER_RATE, totalEnergy / (outputs.size() - i));
+            int sent = cap.receiveEnergy(share, false);
+            totalEnergy -= sent;
         }
 
         // Evenly distribute remaining energy to wires

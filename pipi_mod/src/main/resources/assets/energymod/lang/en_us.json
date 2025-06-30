@@ -27,5 +27,7 @@
   "block.energymod.osmium_ore": "Osmium Ore",
   "item.energymod.copper_ingot": "Copper Ingot",
   "item.energymod.lead_ingot": "Lead Ingot",
-  "item.energymod.osmium_ingot": "Osmium Ingot"
+  "item.energymod.osmium_ingot": "Osmium Ingot",
+  "block.energymod.metal_filler": "Metal Filler",
+  "item.energymod.cast_iron_ingot": "Cast Iron Ingot"
 }

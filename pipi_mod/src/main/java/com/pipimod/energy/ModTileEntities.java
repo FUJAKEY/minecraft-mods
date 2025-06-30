@@ -11,4 +11,5 @@ public class ModTileEntities {
 
     public static final RegistryObject<TileEntityType<EnergyCellTileEntity>> ENERGY_CELL = TILE_ENTITIES.register("energy_cell", () -> TileEntityType.Builder.of(EnergyCellTileEntity::new, ModBlocks.ENERGY_CELL_ML.get(), ModBlocks.ENERGY_CELL_SR.get(), ModBlocks.ENERGY_CELL_MX.get(), ModBlocks.ENERGY_CELL_INF.get()).build(null));
     public static final RegistryObject<TileEntityType<WireBlockEntity>> WIRE = TILE_ENTITIES.register("energy_wire", () -> TileEntityType.Builder.of(WireBlockEntity::new, ModBlocks.ENERGY_WIRE.get()).build(null));
+    public static final RegistryObject<TileEntityType<MetalFillerTileEntity>> METAL_FILLER = TILE_ENTITIES.register("metal_filler", () -> TileEntityType.Builder.of(MetalFillerTileEntity::new, ModBlocks.METAL_FILLER.get()).build(null));
 }
