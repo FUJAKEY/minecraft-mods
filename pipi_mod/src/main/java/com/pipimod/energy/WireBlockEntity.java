@@ -22,7 +22,6 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     private final EnergyStorage storage = new EnergyStorage(CAPACITY, CAPACITY, CAPACITY);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
-    private int lastTransfer = 0;
 
     private void sync() {
         if (level != null && !level.isClientSide) {
@@ -45,71 +44,46 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         EnumMap<Direction, IEnergyStorage> neighbors = new EnumMap<>(Direction.class);
         for (Direction dir : Direction.values()) {
             TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
-            if (te != null)
+            if (te != null) {
                 te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(cap -> neighbors.put(dir, cap));
+            }
         }
 
-        // pull energy from neighbors that have more stored FE
+        // pull phase
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-
-            boolean shouldPull = mode == WireMode.TAKE;
-            if (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored()) {
-                shouldPull = true;
-            }
-
-            if (shouldPull) {
-                int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
-                if (space > 0) {
-                    int diff = other.getEnergyStored() - this.getEnergyStored();
-                    int request = Math.min(TRANSFER_RATE, Math.min(space, diff));
-                    if (request > 0) {
-                        int pulled = other.extractEnergy(request, false);
-                        if (pulled > 0) {
-                            storage.receiveEnergy(pulled, false);
-                            receivedTotal += pulled;
-                        }
-                    }
+            boolean canPull = mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
+            if (canPull && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
+                int request = Math.min(TRANSFER_RATE, storage.getMaxEnergyStored() - storage.getEnergyStored());
+                int pulled = other.extractEnergy(request, false);
+                if (pulled > 0) {
+                    storage.receiveEnergy(pulled, false);
+                    receivedTotal += pulled;
                 }
             }
         }
 
-        // push energy to neighbors that have less stored FE
+        // push phase
         for (Direction dir : Direction.values()) {
             IEnergyStorage other = neighbors.get(dir);
             if (other == null) continue;
             WireMode mode = modes.get(dir);
-
-            boolean shouldSend = mode == WireMode.GIVE;
-            if (mode == WireMode.AUTO && other.getEnergyStored() < this.getEnergyStored()) {
-                shouldSend = true;
-            }
-
-            if (shouldSend) {
-                int available = storage.getEnergyStored();
-                if (available > 0) {
-                    int diff = this.getEnergyStored() - other.getEnergyStored();
-                    int amount = Math.min(TRANSFER_RATE, Math.min(available, diff));
-                    if (amount > 0) {
-                        int sent = other.receiveEnergy(amount, false);
-                        if (sent > 0) {
-                            storage.extractEnergy(sent, false);
-                            sentTotal += sent;
-                        }
-                    }
+            boolean canSend = mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < this.getEnergyStored());
+            if (canSend && storage.getEnergyStored() > 0) {
+                int toSend = Math.min(TRANSFER_RATE, storage.getEnergyStored());
+                int sent = other.receiveEnergy(toSend, false);
+                if (sent > 0) {
+                    storage.extractEnergy(sent, false);
+                    sentTotal += sent;
                 }
             }
         }
 
-        int transferred = Math.max(receivedTotal, sentTotal);
-        if (transferred > 0) {
-            lastTransfer = transferred;
+        if (receivedTotal > 0 || sentTotal > 0) {
             setChanged();
             sync();
-        } else {
-            lastTransfer = 0;
         }
     }
 
@@ -128,7 +102,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     public int getDisplayEnergy() {
-        return Math.max(storage.getEnergyStored(), lastTransfer);
+        return storage.getEnergyStored();
     }
 
     @Override
@@ -136,7 +110,6 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         super.load(state, nbt);
         int energyStored = nbt.getInt("Energy");
         storage.receiveEnergy(energyStored - storage.getEnergyStored(), false);
-        lastTransfer = nbt.getInt("LastTransfer");
         for (Direction dir : Direction.values()) {
             String key = "Mode" + dir.getSerializedName();
             if (nbt.contains(key)) {
@@ -150,7 +123,6 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     public CompoundNBT save(CompoundNBT nbt) {
         super.save(nbt);
         nbt.putInt("Energy", storage.getEnergyStored());
-        nbt.putInt("LastTransfer", lastTransfer);
         for (Direction dir : Direction.values()) {
             nbt.putInt("Mode" + dir.getSerializedName(), modes.get(dir).ordinal());
         }
