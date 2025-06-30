@@ -19,5 +19,7 @@
   "direction.west": "West",
   "direction.up": "Up",
   "direction.down": "Down",
-  "tooltip.wire.capacity": "1280 FE capacity"
+  "tooltip.wire.capacity": "1280 FE capacity",
+  "screen.energymod.facing": "Facing: %s",
+  "screen.energymod.title": "Wire Configuration"
 }

@@ -32,7 +32,7 @@ public class EnergyHudOverlay {
                 WireBlockEntity wire = (WireBlockEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 WireMode mode = wire.getMode(ray.getDirection());
                 String modeStr = new net.minecraft.util.text.TranslationTextComponent("wiremode." + mode.name().toLowerCase()).getString();
-                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", modeStr, wire.getEnergyStored(), wire.getMaxEnergyStored()).getString();
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", modeStr, wire.getDisplayEnergy(), wire.getMaxEnergyStored()).getString();
                 font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
             }
         }

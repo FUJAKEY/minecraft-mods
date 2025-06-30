@@ -19,5 +19,7 @@
   "direction.west": "Запад",
   "direction.up": "Вверх",
   "direction.down": "Вниз",
-  "tooltip.wire.capacity": "Вместимость 1280 FE"
+  "tooltip.wire.capacity": "Вместимость 1280 FE",
+  "screen.energymod.facing": "Направление: %s",
+  "screen.energymod.title": "Настройка провода"
 }

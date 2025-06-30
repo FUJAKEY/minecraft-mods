@@ -22,6 +22,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     private final EnergyStorage storage = new EnergyStorage(CAPACITY, CAPACITY, CAPACITY);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
+    private int lastTransfer = 0;
 
     private void sync() {
         if (level != null && !level.isClientSide) {
@@ -38,6 +39,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public void tick() {
+        int receivedTotal = 0;
         // pull from TAKE or higher-energy neighbors
         for (Direction dir : Direction.values()) {
             WireMode mode = modes.get(dir);
@@ -50,8 +52,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                             int received = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
                             if (received > 0) {
                                 storage.receiveEnergy(received, false);
-                                setChanged();
-                                sync();
+                                receivedTotal += received;
                             }
                         }
                     }
@@ -71,18 +72,27 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                             int sent = other.receiveEnergy(Math.min(TRANSFER_RATE, available), false);
                             if (sent > 0) {
                                 storage.extractEnergy(sent, false);
-                                setChanged();
-                                sync();
                             }
                         }
                     }
                 });
             }
         }
+        if (receivedTotal > 0) {
+            lastTransfer = receivedTotal;
+            setChanged();
+            sync();
+        } else {
+            lastTransfer = 0;
+        }
     }
 
     public void toggleMode(Direction side) {
-        modes.put(side, modes.get(side).next());
+        setMode(side, modes.get(side).next());
+    }
+
+    public void setMode(Direction side, WireMode mode) {
+        modes.put(side, mode);
         setChanged();
         sync();
     }
@@ -91,11 +101,16 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         return modes.get(side);
     }
 
+    public int getDisplayEnergy() {
+        return Math.max(storage.getEnergyStored(), lastTransfer);
+    }
+
     @Override
     public void load(BlockState state, CompoundNBT nbt) {
         super.load(state, nbt);
         int energyStored = nbt.getInt("Energy");
         storage.receiveEnergy(energyStored - storage.getEnergyStored(), false);
+        lastTransfer = nbt.getInt("LastTransfer");
         for (Direction dir : Direction.values()) {
             String key = "Mode" + dir.getSerializedName();
             if (nbt.contains(key)) {
@@ -109,6 +124,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     public CompoundNBT save(CompoundNBT nbt) {
         super.save(nbt);
         nbt.putInt("Energy", storage.getEnergyStored());
+        nbt.putInt("LastTransfer", lastTransfer);
         for (Direction dir : Direction.values()) {
             nbt.putInt("Mode" + dir.getSerializedName(), modes.get(dir).ordinal());
         }

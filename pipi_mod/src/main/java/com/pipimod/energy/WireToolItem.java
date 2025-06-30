@@ -16,20 +16,26 @@ public class WireToolItem extends Item {
     @Override
     public ActionResultType useOn(ItemUseContext context) {
         World world = context.getLevel();
-        if (!world.isClientSide) {
-            Direction side = context.getClickedFace();
-            BlockPos pos = context.getClickedPos();
-            TileEntity te = world.getBlockEntity(pos);
-            if (!(te instanceof WireBlockEntity)) {
-                pos = pos.relative(side);
-                te = world.getBlockEntity(pos);
-                side = side.getOpposite();
+        Direction side = context.getClickedFace();
+        BlockPos pos = context.getClickedPos();
+        TileEntity te = world.getBlockEntity(pos);
+        if (!(te instanceof WireBlockEntity)) {
+            pos = pos.relative(side);
+            te = world.getBlockEntity(pos);
+            side = side.getOpposite();
+        }
+        if (te instanceof WireBlockEntity) {
+            WireBlockEntity wire = (WireBlockEntity) te;
+            PlayerEntity player = context.getPlayer();
+            if (player != null && player.isCrouching()) {
+                if (world.isClientSide) {
+                    net.minecraft.client.Minecraft.getInstance().setScreen(new WireConfigScreen(pos, wire));
+                }
+                return ActionResultType.SUCCESS;
             }
-            if (te instanceof WireBlockEntity) {
-                WireBlockEntity wire = (WireBlockEntity) te;
+            if (!world.isClientSide) {
                 wire.toggleMode(side);
                 WireMode after = wire.getMode(side);
-                PlayerEntity player = context.getPlayer();
                 if (player != null) {
                     String modeStr = new TranslationTextComponent("wiremode." + after.name().toLowerCase()).getString();
                     String sideStr = new TranslationTextComponent("direction." + side.getSerializedName()).getString();
