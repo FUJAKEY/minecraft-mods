@@ -1,0 +1,7 @@
+{
+  "parent": "block/block",
+  "textures": { "all": "energymod:block/black" },
+  "elements": [
+    {"from":[4,0,4],"to":[12,16,12],"faces":{"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"},"up":{"texture":"#all"},"down":{"texture":"#all"}}}
+  ]
+}

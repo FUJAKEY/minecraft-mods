@@ -1,0 +1,6 @@
+{
+  "parent": "energymod:block/energy_cell",
+  "textures": {
+    "all": "energymod:block/black"
+  }
+}

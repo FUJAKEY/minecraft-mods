@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {"item": "energymod:osmium_ore"},
+  "result": "energymod:osmium_ingot",
+  "experience": 0.7,
+  "cookingtime": 200
+}
