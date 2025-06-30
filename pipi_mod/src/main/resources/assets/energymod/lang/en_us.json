@@ -35,18 +35,18 @@
   "itemGroup.energymod_generators": "Energy Generator",
   "block.energymod.thermal_generator": "Thermal Generator",
   "block.energymod.solar_panel": "Solar Panel",
-  "block.energymod.wind_turbine": "Wind Turbine"
-  ,"book.energymod.wiki.title": "Energy Mod Wiki"
-  ,"book.energymod.wiki.author": "EnergyMod"
-  ,"book.energymod.wiki.page1": "Energy cells store FE. Use wires to transfer energy. Toggle modes with the Wire Tool."
-  ,"book.energymod.wiki.page2": "Wire recipe: three copper ingots and one lead ingot = 4 wires. Generators produce FE.",
-  "book.energymod.wiki.page3": "Wires have TAKE, GIVE and DISABLED modes. Auto mode pulls from generators automatically.",
-  "book.energymod.wiki.page4": "Energy cells of higher tier hold more FE: 100k, 1M and 10M respectively.",
-  "book.energymod.wiki.page5": "Infinite cells start filled and supply endless FE for testing machines.",
-  "book.energymod.wiki.page6": "Solar panels work only during the day and stop when it rains.",
-  "book.energymod.wiki.page7": "Thermal generators depend on biome temperature and nearby lava.",
-  "book.energymod.wiki.page8": "Wind turbines produce power high above ground and spin faster in storms.",
-  "book.energymod.wiki.page9": "Use the Metal Filler to craft cast iron with coal and FE.",
-  "book.energymod.wiki.page10": "All blocks support Forge and Mekanism energy capabilities for compatibility.",
+  "block.energymod.wind_turbine": "Wind Turbine",
+  "book.energymod.wiki.title": "Energy Mod Wiki",
+  "book.energymod.wiki.author": "EnergyMod",
+  "book.energymod.wiki.page1": "Energy cells hold Forge Energy and act as buffers. Connect wires to move power between machines. Use the Wire Tool to toggle each side.",
+  "book.energymod.wiki.page2": "Craft wires from three copper ingots and one lead ingot in a row to receive four wires. Right-click a wire with the tool to cycle TAKE or GIVE.",
+  "book.energymod.wiki.page3": "There are four cell tiers: ML stores 100k FE, SR stores 1M, MX stores 10M and the infinite cell never runs dry.",
+  "book.energymod.wiki.page4": "Solar panels generate FE only in daylight with clear skies. Use energy cells to buffer power through the night or rain.",
+  "book.energymod.wiki.page5": "Thermal generators draw heat from the environment. Hot biomes or nearby lava boost output while cold areas reduce it.",
+  "book.energymod.wiki.page6": "Wind turbines work best when placed high up. Their blades spin faster during storms and provide additional FE.",
+  "book.energymod.wiki.page7": "The Metal Filler consumes 800 FE over five seconds to turn iron and coal into cast iron ingots. The process pauses without power.",
+  "book.energymod.wiki.page8": "Copper, lead and osmium ores spawn deep underground from Y30 to bedrock. Smelt them into ingots for crafting machines and wires.",
+  "book.energymod.wiki.page9": "Wire modes include AUTO, TAKE, GIVE and DISABLED. AUTO balances energy with neighbors. Sneak-click with the tool to open settings.",
+  "book.energymod.wiki.page10": "All machines support Forge and Mekanism energy. Use /wiki for help and check the Energy Generator creative tab for every block.",
   "message.energymod.efficiency": "Efficiency: %s%%"
 }
