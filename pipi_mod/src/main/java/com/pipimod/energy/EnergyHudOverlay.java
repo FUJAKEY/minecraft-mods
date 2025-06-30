@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.util.Direction;
+import com.pipimod.energy.GeneratorTileEntity;
 
 
 @Mod.EventBusSubscriber(modid = EnergyMod.MODID, value = Dist.CLIENT)
@@ -28,6 +29,12 @@ public class EnergyHudOverlay {
                 EnergyCellTileEntity cell = (EnergyCellTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", cell.getEnergyStored(), cell.getMaxEnergyStored()).getString();
                 font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
+            } else if (mc.level.getBlockEntity(ray.getBlockPos()) instanceof GeneratorTileEntity) {
+                GeneratorTileEntity gen = (GeneratorTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", gen.getEnergyStored(), gen.getMaxEnergyStored()).getString();
+                String eff = new net.minecraft.util.text.TranslationTextComponent("message.energymod.efficiency", gen.getEfficiency()).getString();
+                font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f - 10, 0xFFFFFF);
+                font.draw(stack, eff, width / 2f - font.width(eff) / 2f, height / 2f + 2, 0xFFFFFF);
             } else if (mc.player != null && (mc.player.getMainHandItem().getItem() instanceof WireToolItem || mc.player.getOffhandItem().getItem() instanceof WireToolItem) && mc.level.getBlockEntity(ray.getBlockPos()) instanceof WireBlockEntity) {
                 WireBlockEntity wire = (WireBlockEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 WireMode mode = wire.getMode(ray.getDirection());

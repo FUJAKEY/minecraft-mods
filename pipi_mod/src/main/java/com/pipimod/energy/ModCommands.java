@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,10 +26,11 @@ public class ModCommands {
                 ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
                 ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
                 CompoundNBT tag = new CompoundNBT();
-                tag.putString("title", "Energy Mod Wiki");
-                tag.putString("author", "EnergyMod");
+                tag.putString("title", new TranslationTextComponent("book.energymod.wiki.title").getString());
+                tag.putString("author", new TranslationTextComponent("book.energymod.wiki.author").getString());
                 ListNBT pages = new ListNBT();
-                pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent("Use energy cells and wires to store and transfer FE. Generators produce power."))));
+                pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new TranslationTextComponent("book.energymod.wiki.page1"))));
+                pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new TranslationTextComponent("book.energymod.wiki.page2"))));
                 tag.put("pages", pages);
                 book.setTag(tag);
                 if (!player.addItem(book)) {

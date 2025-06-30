@@ -74,19 +74,25 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             totalEnergy += w.storage.getEnergyStored();
         }
 
-        // Pull from TAKE sides first
+        // Pull from TAKE sides or AUTO connected to external blocks
         for (WireBlockEntity w : network) {
             for (Direction dir : Direction.values()) {
-                if (w.modes.get(dir) != WireMode.TAKE) continue;
+                WireMode mode = w.modes.get(dir);
+                if (mode == WireMode.DISABLED) continue;
+                boolean treatAsTake = mode == WireMode.TAKE;
                 TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
                 if (te != null) {
+                    boolean external = !(te instanceof WireBlockEntity);
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
                     if (cap != null) {
-                        int space = capacity - totalEnergy;
-                        if (space > 0) {
-                            int pulled = cap.extractEnergy(Math.min(space, TRANSFER_RATE), false);
-                            if (pulled > 0) {
-                                totalEnergy += pulled;
+                        if (mode == WireMode.AUTO && external) treatAsTake = true;
+                        if (treatAsTake) {
+                            int space = capacity - totalEnergy;
+                            if (space > 0) {
+                                int pulled = cap.extractEnergy(Math.min(space, TRANSFER_RATE), false);
+                                if (pulled > 0) {
+                                    totalEnergy += pulled;
+                                }
                             }
                         }
                     }
@@ -98,7 +104,9 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         java.util.List<IEnergyStorage> outputs = new java.util.ArrayList<>();
         for (WireBlockEntity w : network) {
             for (Direction dir : Direction.values()) {
-                if (w.modes.get(dir) == WireMode.TAKE) continue;
+                WireMode mode = w.modes.get(dir);
+                if (mode == WireMode.DISABLED) continue;
+                if (mode == WireMode.TAKE) continue;
                 TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
                 if (te != null && !(te instanceof WireBlockEntity)) {
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
@@ -140,6 +148,13 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     public void setMode(Direction side, WireMode mode) {
         modes.put(side, mode);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
+            if (state.getBlock() instanceof EnergyWireBlock) {
+                state = state.setValue(EnergyWireBlock.getProperty(side), mode != WireMode.DISABLED);
+                level.setBlock(worldPosition, state, 3);
+            }
+        }
         setChanged();
         sync();
     }

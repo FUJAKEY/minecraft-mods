@@ -18,8 +18,11 @@ import javax.annotation.Nullable;
 
 public class WindTurbineBlock extends Block {
     private static final VoxelShape SHAPE = VoxelShapes.or(
-            Block.box(7, 0, 7, 9, 16, 9),
-            Block.box(4, 14, 4, 12, 16, 12)
+            Block.box(0, 0, 0, 16, 16, 16),
+            Block.box(5, 16, 5, 11, 32, 11),
+            Block.box(7, 32, 7, 9, 48, 9),
+            Block.box(0, 44, 7, 16, 46, 9),
+            Block.box(7, 44, 0, 9, 46, 16)
     );
 
     public WindTurbineBlock() {
@@ -39,6 +42,11 @@ public class WindTurbineBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
         return SHAPE;
     }
 

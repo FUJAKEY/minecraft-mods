@@ -13,6 +13,7 @@
   "wiremode.auto": "Auto",
   "wiremode.take": "Take",
   "wiremode.give": "Give",
+  "wiremode.disabled": "Disabled",
   "direction.north": "North",
   "direction.south": "South",
   "direction.east": "East",
@@ -35,4 +36,9 @@
   "block.energymod.thermal_generator": "Thermal Generator",
   "block.energymod.solar_panel": "Solar Panel",
   "block.energymod.wind_turbine": "Wind Turbine"
+  ,"book.energymod.wiki.title": "Energy Mod Wiki"
+  ,"book.energymod.wiki.author": "EnergyMod"
+  ,"book.energymod.wiki.page1": "Energy cells store FE. Use wires to transfer energy. Toggle modes with the Wire Tool."
+  ,"book.energymod.wiki.page2": "Wire recipe: three copper ingots and one lead ingot = 4 wires. Generators produce FE."
+  ,"message.energymod.efficiency": "Efficiency: %s%%"
 }

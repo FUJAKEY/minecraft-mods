@@ -13,6 +13,7 @@
   "wiremode.auto": "Авто",
   "wiremode.take": "Забирать",
   "wiremode.give": "Отдавать",
+  "wiremode.disabled": "Выкл",
   "direction.north": "Север",
   "direction.south": "Юг",
   "direction.east": "Восток",
@@ -35,4 +36,9 @@
   "block.energymod.thermal_generator": "Теплогенератор",
   "block.energymod.solar_panel": "Солнечная панель",
   "block.energymod.wind_turbine": "Ветрогенератор"
+  ,"book.energymod.wiki.title": "Вики Energy Mod"
+  ,"book.energymod.wiki.author": "EnergyMod"
+  ,"book.energymod.wiki.page1": "Хранилища сохраняют FE, провода передают её. Режимы проводов переключаются инструментом."
+  ,"book.energymod.wiki.page2": "Рецепт провода: три медных слитка и один свинцовый = 4 провода. Генераторы вырабатывают FE."
+  ,"message.energymod.efficiency": "Эффективность: %s%%"
 }

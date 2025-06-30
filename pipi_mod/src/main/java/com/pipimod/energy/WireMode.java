@@ -3,7 +3,8 @@ package com.pipimod.energy;
 public enum WireMode {
     AUTO,
     TAKE,
-    GIVE;
+    GIVE,
+    DISABLED;
 
     public WireMode next() {
         switch (this) {
@@ -12,6 +13,8 @@ public enum WireMode {
             case TAKE:
                 return GIVE;
             case GIVE:
+                return DISABLED;
+            case DISABLED:
             default:
                 return AUTO;
         }

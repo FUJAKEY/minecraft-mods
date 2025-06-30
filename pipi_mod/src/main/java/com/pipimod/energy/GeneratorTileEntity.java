@@ -23,6 +23,10 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
         this.generateRate = rate;
     }
 
+    public int getEfficiency() {
+        return 100;
+    }
+
     protected boolean canGenerate() {
         return true;
     }
@@ -31,9 +35,12 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
     public void tick() {
         if (level != null && !level.isClientSide && canGenerate()) {
             if (storage.getEnergyStored() < storage.getMaxEnergyStored()) {
-                storage.receiveEnergy(generateRate, false);
-                setChanged();
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+                int gen = generateRate * getEfficiency() / 100;
+                if (gen > 0) {
+                    storage.receiveEnergy(gen, false);
+                    setChanged();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+                }
             }
         }
     }

@@ -80,7 +80,7 @@ public class EnergyWireBlock extends Block {
         return state.setValue(getProperty(direction), connected);
     }
 
-    private BooleanProperty getProperty(Direction dir) {
+    public static BooleanProperty getProperty(Direction dir) {
         switch (dir) {
             case NORTH: return NORTH;
             case SOUTH: return SOUTH;
