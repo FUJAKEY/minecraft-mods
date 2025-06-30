@@ -39,48 +39,54 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public void tick() {
-        int[] receivedTotal = {0};
-        int[] sentTotal = {0};
-        // pull from TAKE or higher-energy neighbors
+        int receivedTotal = 0;
+        int sentTotal = 0;
+
+        // pull energy from neighbors that can provide it
         for (Direction dir : Direction.values()) {
             WireMode mode = modes.get(dir);
             TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-            if (neighbor != null) {
-                neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
-                    if (mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > storage.getEnergyStored())) {
-                        int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
-                        if (space > 0) {
-                            int received = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
-                            if (received > 0) {
-                                storage.receiveEnergy(received, false);
-                                receivedTotal[0] += received;
-                            }
+            if (neighbor == null) continue;
+
+            neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                boolean shouldPull = mode == WireMode.TAKE
+                        || (mode == WireMode.AUTO && other.getEnergyStored() > 0);
+                if (shouldPull) {
+                    int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
+                    if (space > 0) {
+                        int pulled = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
+                        if (pulled > 0) {
+                            storage.receiveEnergy(pulled, false);
+                            receivedTotal += pulled;
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
-        // then push to GIVE or lower-energy neighbors
+        // push energy to neighbors that can receive it
         for (Direction dir : Direction.values()) {
             WireMode mode = modes.get(dir);
             TileEntity neighbor = level.getBlockEntity(worldPosition.relative(dir));
-            if (neighbor != null) {
-                neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
-                    if (mode == WireMode.GIVE || (mode == WireMode.AUTO && other.getEnergyStored() < storage.getEnergyStored())) {
-                        int available = storage.getEnergyStored();
-                        if (available > 0) {
-                            int sent = other.receiveEnergy(Math.min(TRANSFER_RATE, available), false);
-                            if (sent > 0) {
-                                storage.extractEnergy(sent, false);
-                                sentTotal[0] += sent;
-                            }
+            if (neighbor == null) continue;
+
+            neighbor.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(other -> {
+                boolean shouldSend = mode == WireMode.GIVE
+                        || (mode == WireMode.AUTO && other.getEnergyStored() < other.getMaxEnergyStored());
+                if (shouldSend) {
+                    int available = storage.getEnergyStored();
+                    if (available > 0) {
+                        int sent = other.receiveEnergy(Math.min(TRANSFER_RATE, available), false);
+                        if (sent > 0) {
+                            storage.extractEnergy(sent, false);
+                            sentTotal += sent;
                         }
                     }
-                });
-            }
+                }
+            });
         }
-        int transferred = Math.max(receivedTotal[0], sentTotal[0]);
+
+        int transferred = Math.max(receivedTotal, sentTotal);
         if (transferred > 0) {
             lastTransfer = transferred;
             setChanged();
