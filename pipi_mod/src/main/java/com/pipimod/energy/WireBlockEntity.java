@@ -39,7 +39,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public void tick() {
-        int receivedTotal = 0;
+        int[] receivedTotal = {0};
         // pull from TAKE or higher-energy neighbors
         for (Direction dir : Direction.values()) {
             WireMode mode = modes.get(dir);
@@ -52,7 +52,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                             int received = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
                             if (received > 0) {
                                 storage.receiveEnergy(received, false);
-                                receivedTotal += received;
+                                receivedTotal[0] += received;
                             }
                         }
                     }
@@ -78,8 +78,8 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                 });
             }
         }
-        if (receivedTotal > 0) {
-            lastTransfer = receivedTotal;
+        if (receivedTotal[0] > 0) {
+            lastTransfer = receivedTotal[0];
             setChanged();
             sync();
         } else {
