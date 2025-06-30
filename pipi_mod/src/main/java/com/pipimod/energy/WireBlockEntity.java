@@ -15,6 +15,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import com.pipimod.energy.MekanismCompat;
 
 import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class WireBlockEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
     private static final int CAPACITY = 1280;
@@ -22,6 +26,7 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     private final EnergyStorage storage = new EnergyStorage(CAPACITY, CAPACITY, CAPACITY);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final EnumMap<Direction, WireMode> modes = new EnumMap<>(Direction.class);
+    private long lastNetworkTick = -1;
 
     private void sync() {
         if (level != null && !level.isClientSide) {
@@ -36,57 +41,91 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
         }
     }
 
+    private void collectNetwork(Set<WireBlockEntity> out) {
+        Queue<WireBlockEntity> queue = new ArrayDeque<>();
+        queue.add(this);
+        while (!queue.isEmpty()) {
+            WireBlockEntity w = queue.poll();
+            if (!out.add(w)) continue;
+            for (Direction d : Direction.values()) {
+                TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(d));
+                if (te instanceof WireBlockEntity) {
+                    queue.add((WireBlockEntity) te);
+                }
+            }
+        }
+    }
+
     @Override
     public void tick() {
         if (level == null || level.isClientSide) return;
+        long time = level.getGameTime();
+        if (lastNetworkTick == time) return;
 
-        int before = storage.getEnergyStored();
-
-        EnumMap<Direction, IEnergyStorage> neighbors = new EnumMap<>(Direction.class);
-        for (Direction dir : Direction.values()) {
-            TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
-            if (te != null) {
-                te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(cap -> neighbors.put(dir, cap));
-            }
+        Set<WireBlockEntity> network = new HashSet<>();
+        collectNetwork(network);
+        for (WireBlockEntity w : network) {
+            w.lastNetworkTick = time;
         }
 
-        // pull energy from TAKE sides or neighbours with more FE
-        for (Direction dir : Direction.values()) {
-            IEnergyStorage other = neighbors.get(dir);
-            if (other == null) continue;
-            WireMode mode = modes.get(dir);
-            boolean shouldPull = mode == WireMode.TAKE || (mode == WireMode.AUTO && other.getEnergyStored() > this.getEnergyStored());
-            if (shouldPull) {
-                int space = storage.getMaxEnergyStored() - storage.getEnergyStored();
-                if (space > 0) {
-                    int pulled = other.extractEnergy(Math.min(TRANSFER_RATE, space), false);
-                    if (pulled > 0) {
-                        storage.receiveEnergy(pulled, false);
+        int capacity = CAPACITY * network.size();
+        int totalEnergy = 0;
+        for (WireBlockEntity w : network) {
+            totalEnergy += w.storage.getEnergyStored();
+        }
+
+        // Pull from TAKE sides first
+        for (WireBlockEntity w : network) {
+            for (Direction dir : Direction.values()) {
+                if (w.modes.get(dir) != WireMode.TAKE) continue;
+                TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
+                if (te != null) {
+                    IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
+                    if (cap != null) {
+                        int space = capacity - totalEnergy;
+                        if (space > 0) {
+                            int pulled = cap.extractEnergy(Math.min(space, TRANSFER_RATE), false);
+                            if (pulled > 0) {
+                                totalEnergy += pulled;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        // push energy towards GIVE sides or neighbours with less FE
-        for (Direction dir : Direction.values()) {
-            IEnergyStorage other = neighbors.get(dir);
-            if (other == null) continue;
-            WireMode mode = modes.get(dir);
-            boolean shouldPush = mode == WireMode.GIVE || (mode == WireMode.AUTO && this.getEnergyStored() > other.getEnergyStored());
-            if (shouldPush) {
-                int available = Math.min(TRANSFER_RATE, storage.getEnergyStored());
-                if (available > 0) {
-                    int sent = other.receiveEnergy(available, false);
-                    if (sent > 0) {
-                        storage.extractEnergy(sent, false);
+        // Push to GIVE and AUTO outputs
+        for (WireBlockEntity w : network) {
+            for (Direction dir : Direction.values()) {
+                WireMode mode = w.modes.get(dir);
+                if (mode == WireMode.TAKE) continue;
+                TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
+                if (te != null && !(te instanceof WireBlockEntity)) {
+                    IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
+                    if (cap != null && totalEnergy > 0) {
+                        int sent = cap.receiveEnergy(Math.min(TRANSFER_RATE, totalEnergy), false);
+                        totalEnergy -= sent;
                     }
                 }
             }
         }
 
-        if (storage.getEnergyStored() != before) {
-            setChanged();
-            sync();
+        // Evenly distribute remaining energy to wires
+        int per = totalEnergy / network.size();
+        int rem = totalEnergy % network.size();
+        for (WireBlockEntity w : network) {
+            int target = per + (rem > 0 ? 1 : 0);
+            if (rem > 0) rem--;
+            int current = w.storage.getEnergyStored();
+            if (current < target) {
+                w.storage.receiveEnergy(target - current, false);
+            } else if (current > target) {
+                w.storage.extractEnergy(current - target, false);
+            }
+            if (w.storage.getEnergyStored() != current) {
+                w.setChanged();
+                w.sync();
+            }
         }
     }
 
