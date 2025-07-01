@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CLC",
+    " C ",
+    "   "
+  ],
+  "key": {
+    "C": { "item": "energymod:copper_ingot" },
+    "L": { "item": "energymod:lead_ingot" }
+  },
+  "result": {
+    "item": "energymod:energy_wire",
+    "count": 4
+  }
+}

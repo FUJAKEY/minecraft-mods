@@ -1,0 +1,8 @@
+{
+  "parent": "block/block",
+  "textures": { "all": "energymod:block/wind_turbine" },
+  "elements": [
+    {"from":[2,16,2],"to":[14,32,14],"faces":{"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"},"up":{"texture":"#all"},"down":{"texture":"#all"}}},
+    {"from":[4,32,4],"to":[12,48,12],"faces":{"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"},"up":{"texture":"#all"},"down":{"texture":"#all"}}}
+  ]
+}

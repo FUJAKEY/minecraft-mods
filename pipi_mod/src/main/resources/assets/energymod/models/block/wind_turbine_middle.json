@@ -1,0 +1,7 @@
+{
+  "parent": "block/block",
+  "textures": { "all": "energymod:block/wind_turbine" },
+  "elements": [
+    {"from":[2,0,2],"to":[14,16,14],"faces":{"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"},"up":{"texture":"#all"},"down":{"texture":"#all"}}}
+  ]
+}
