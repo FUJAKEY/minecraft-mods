@@ -37,7 +37,8 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
     public void tick() {
         if (level != null && !level.isClientSide && canGenerate()) {
             if (storage.getEnergyStored() < storage.getMaxEnergyStored()) {
-                int gen = generateRate * getEfficiency() / 100;
+                // global nerf: generators now produce only half of their normal output
+                int gen = generateRate * getEfficiency() / 100 / 2;
                 if (gen > 0) {
                     storage.receiveEnergy(gen, false);
                     setChanged();
