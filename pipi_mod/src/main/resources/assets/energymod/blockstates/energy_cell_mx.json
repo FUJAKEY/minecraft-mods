@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "energymod:block/energy_cell" }
+    "": { "model": "energymod:block/energy_cell_mx" }
   }
 }
