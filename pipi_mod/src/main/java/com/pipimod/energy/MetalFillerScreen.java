@@ -7,8 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
-    // use vanilla furnace GUI since custom texture was removed
-    private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "textures/gui/container/furnace.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(EnergyMod.MODID, "textures/gui/metal_filler_screen.png");
 
     public MetalFillerScreen(MetalFillerContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
