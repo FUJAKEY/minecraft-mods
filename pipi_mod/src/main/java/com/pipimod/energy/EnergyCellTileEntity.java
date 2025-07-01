@@ -15,8 +15,10 @@ import net.minecraft.block.BlockState;
 
 import com.pipimod.energy.MekanismCompat;
 
-public class EnergyCellTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
+public class EnergyCellTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage, EnergyInfoProvider {
     private EnergyStorage storage = new EnergyStorage(0, 0, 0, 0);
+    private int inputTick;
+    private int outputTick;
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private int capacity = 0;
 
@@ -49,6 +51,8 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
 
     @Override
     public void tick() {
+        inputTick = 0;
+        outputTick = 0;
     }
 
     @Override
@@ -107,6 +111,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int r = storage.receiveEnergy(maxReceive, simulate);
         if (!simulate && r > 0) {
+            inputTick += r;
             setChanged();
             sync();
         }
@@ -117,6 +122,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public int extractEnergy(int maxExtract, boolean simulate) {
         int e = storage.extractEnergy(maxExtract, simulate);
         if (!simulate && e > 0) {
+            outputTick += e;
             setChanged();
             sync();
         }
@@ -153,4 +159,11 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public boolean canReceive() {
         return true;
     }
+
+    // EnergyInfoProvider
+    @Override
+    public int getLastInput() { return inputTick; }
+
+    @Override
+    public int getLastOutput() { return outputTick; }
 }

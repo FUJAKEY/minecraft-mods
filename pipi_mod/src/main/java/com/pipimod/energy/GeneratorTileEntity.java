@@ -14,10 +14,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.block.BlockState;
 
-public abstract class GeneratorTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
+public abstract class GeneratorTileEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage, EnergyInfoProvider {
     protected final EnergyStorage storage;
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private final int generateRate;
+    private int generatedTick;
 
     protected GeneratorTileEntity(int capacity, int rate, TileEntityType<?> type) {
         super(type);
@@ -35,12 +36,14 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
 
     @Override
     public void tick() {
+        generatedTick = 0;
         if (level != null && !level.isClientSide && canGenerate()) {
             if (storage.getEnergyStored() < storage.getMaxEnergyStored()) {
                 // global nerf: generators now produce only half of their normal output
                 int gen = generateRate * getEfficiency() / 100 / 2;
                 if (gen > 0) {
                     storage.receiveEnergy(gen, false);
+                    generatedTick = gen;
                     setChanged();
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
                 }
@@ -110,4 +113,14 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
     @Override public int getMaxEnergyStored() { return storage.getMaxEnergyStored(); }
     @Override public boolean canExtract() { return true; }
     @Override public boolean canReceive() { return false; }
+
+    // EnergyInfoProvider
+    @Override
+    public int getLastInput() { return 0; }
+
+    @Override
+    public int getLastOutput() { return 0; }
+
+    @Override
+    public int getLastGeneration() { return generatedTick; }
 }

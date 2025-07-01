@@ -25,16 +25,35 @@ public class EnergyHudOverlay {
             int width = mc.getWindow().getGuiScaledWidth();
             int height = mc.getWindow().getGuiScaledHeight();
 
-            if (mc.level.getBlockEntity(ray.getBlockPos()) instanceof EnergyCellTileEntity) {
-                EnergyCellTileEntity cell = (EnergyCellTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
-                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", cell.getEnergyStored(), cell.getMaxEnergyStored()).getString();
-                font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
-            } else if (mc.level.getBlockEntity(ray.getBlockPos()) instanceof GeneratorTileEntity) {
-                GeneratorTileEntity gen = (GeneratorTileEntity) mc.level.getBlockEntity(ray.getBlockPos());
-                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", gen.getEnergyStored(), gen.getMaxEnergyStored()).getString();
-                String eff = new net.minecraft.util.text.TranslationTextComponent("message.energymod.efficiency", gen.getEfficiency()).getString();
-                font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f - 10, 0xFFFFFF);
-                font.draw(stack, eff, width / 2f - font.width(eff) / 2f, height / 2f + 2, 0xFFFFFF);
+            net.minecraft.tileentity.TileEntity tile = mc.level.getBlockEntity(ray.getBlockPos());
+            if (tile instanceof EnergyInfoProvider && tile instanceof net.minecraftforge.energy.IEnergyStorage) {
+                net.minecraftforge.energy.IEnergyStorage cap = (net.minecraftforge.energy.IEnergyStorage) tile;
+                EnergyInfoProvider info = (EnergyInfoProvider) tile;
+                String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.energy", cap.getEnergyStored(), cap.getMaxEnergyStored()).getString();
+                int y = height / 2 - 10;
+                font.draw(stack, text, width / 2f - font.width(text) / 2f, y, 0xFFFFFF);
+                y += 12;
+                if (tile instanceof GeneratorTileEntity) {
+                    GeneratorTileEntity gen = (GeneratorTileEntity) tile;
+                    String eff = new net.minecraft.util.text.TranslationTextComponent("message.energymod.efficiency", gen.getEfficiency()).getString();
+                    font.draw(stack, eff, width / 2f - font.width(eff) / 2f, y, 0xFFFFFF);
+                    y += 12;
+                    if (info.getLastGeneration() > 0) {
+                        String g = new net.minecraft.util.text.TranslationTextComponent("message.energymod.gen", info.getLastGeneration()).getString();
+                        font.draw(stack, g, width / 2f - font.width(g) / 2f, y, 0xFFFFFF);
+                    }
+                } else {
+                    if (info.getLastInput() > 0) {
+                        String in = new net.minecraft.util.text.TranslationTextComponent("message.energymod.input", info.getLastInput()).getString();
+                        font.draw(stack, in, width / 2f - font.width(in) / 2f, y, 0xFFFFFF);
+                        y += 12;
+                    }
+                    if (info.getLastOutput() > 0) {
+                        String out = new net.minecraft.util.text.TranslationTextComponent("message.energymod.output", info.getLastOutput()).getString();
+                        font.draw(stack, out, width / 2f - font.width(out) / 2f, y, 0xFFFFFF);
+                    }
+                }
+            } else if (mc.player != null && (mc.player.getMainHandItem().getItem() instanceof WireToolItem || mc.player.getOffhandItem().getItem() instanceof WireToolItem) && mc.level.getBlockEntity(ray.getBlockPos()) instanceof WireBlockEntity) {
             } else if (mc.player != null && (mc.player.getMainHandItem().getItem() instanceof WireToolItem || mc.player.getOffhandItem().getItem() instanceof WireToolItem) && mc.level.getBlockEntity(ray.getBlockPos()) instanceof WireBlockEntity) {
                 WireBlockEntity wire = (WireBlockEntity) mc.level.getBlockEntity(ray.getBlockPos());
                 WireMode mode = wire.getMode(ray.getDirection());

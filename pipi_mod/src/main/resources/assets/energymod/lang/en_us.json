@@ -48,5 +48,8 @@
   "book.energymod.wiki.page8": "Copper, lead and osmium ores spawn deep underground from Y30 to bedrock. Smelt them into ingots for crafting machines and wires.",
   "book.energymod.wiki.page9": "Wire modes include AUTO, TAKE, GIVE and DISABLED. AUTO balances energy with neighbors. Sneak-click with the tool to open settings.",
   "book.energymod.wiki.page10": "All generators now produce half their previous power. Use /wiki for help and check the Energy Generator creative tab for every block.",
-  "message.energymod.efficiency": "Efficiency: %s%%"
+  "message.energymod.efficiency": "Efficiency: %s%%",
+  "message.energymod.input": "Input: %s FE/t",
+  "message.energymod.output": "Output: %s FE/t",
+  "message.energymod.gen": "Generation: %s FE/t"
 }

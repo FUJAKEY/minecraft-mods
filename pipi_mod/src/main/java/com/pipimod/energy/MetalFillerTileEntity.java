@@ -23,12 +23,15 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
-public class MetalFillerTileEntity extends LockableTileEntity implements ITickableTileEntity, IEnergyStorage, INamedContainerProvider {
+
+public class MetalFillerTileEntity extends LockableTileEntity implements ITickableTileEntity, IEnergyStorage, INamedContainerProvider, EnergyInfoProvider {
     private final NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private final EnergyStorage energy = new EnergyStorage(10000, 10000, 10000);
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this);
     private int carbon;
     private int progress;
+    private int inputTick;
+    private int outputTick;
 
     public MetalFillerTileEntity() {
         super(ModTileEntities.METAL_FILLER.get());
@@ -36,6 +39,8 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
 
     @Override
     public void tick() {
+        inputTick = 0;
+        outputTick = 0;
         if (level == null || level.isClientSide) return;
         // consume coal
         ItemStack fuel = items.get(0);
@@ -102,14 +107,20 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int r = energy.receiveEnergy(maxReceive, simulate);
-        if (!simulate && r > 0) setChanged();
+        if (!simulate && r > 0) {
+            inputTick += r;
+            setChanged();
+        }
         return r;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         int e = energy.extractEnergy(maxExtract, simulate);
-        if (!simulate && e > 0) setChanged();
+        if (!simulate && e > 0) {
+            outputTick += e;
+            setChanged();
+        }
         return e;
     }
 
@@ -217,4 +228,11 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
         return createMenu(id, playerInventory);
     }
+
+    // EnergyInfoProvider
+    @Override
+    public int getLastInput() { return inputTick; }
+
+    @Override
+    public int getLastOutput() { return outputTick; }
 }
