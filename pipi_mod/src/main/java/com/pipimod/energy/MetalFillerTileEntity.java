@@ -25,7 +25,8 @@ import javax.annotation.Nullable;
 
 public class MetalFillerTileEntity extends LockableTileEntity implements ITickableTileEntity, IEnergyStorage, INamedContainerProvider {
     private final NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
-    private final EnergyStorage energy = new EnergyStorage(10000, 10000, 10000);
+    // Metal Filler holds up to 1000 FE and can transfer at the same rate
+    private final EnergyStorage energy = new EnergyStorage(1000, 1000, 1000);
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this);
     private int carbon;
     private int progress;
@@ -51,24 +52,31 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
                 progress++;
                 if (progress >= 100) {
                     ItemStack out = items.get(2);
-                    if (out.isEmpty()) {
-                        items.set(2, new ItemStack(ModItems.CAST_IRON_INGOT.get()));
-                        progress = 0;
-                        setChanged();
-                    } else if (out.getItem() == ModItems.CAST_IRON_INGOT.get() && out.getCount() < out.getMaxStackSize()) {
-                        out.grow(1);
-                        progress = 0;
-                        setChanged();
+                    ItemStack input = items.get(1);
+                    if (!input.isEmpty() && input.getItem() == Items.IRON_INGOT && carbon >= 40) {
+                        if (out.isEmpty()) {
+                            items.set(2, new ItemStack(ModItems.CAST_IRON_INGOT.get()));
+                            carbon -= 40;
+                            input.shrink(1);
+                            progress = 0;
+                            setChanged();
+                        } else if (out.getItem() == ModItems.CAST_IRON_INGOT.get() && out.getCount() < out.getMaxStackSize()) {
+                            out.grow(1);
+                            carbon -= 40;
+                            input.shrink(1);
+                            progress = 0;
+                            setChanged();
+                        } else {
+                            progress = 99; // wait until output has space
+                        }
                     } else {
-                        progress = 99; // wait until output has space
+                        progress = 0;
                     }
                 }
             }
         } else {
             ItemStack input = items.get(1);
             if (!input.isEmpty() && input.getItem() == Items.IRON_INGOT && carbon >= 40 && energy.getEnergyStored() > 0) {
-                input.shrink(1);
-                carbon -= 40;
                 progress = 1;
                 setChanged();
             }
