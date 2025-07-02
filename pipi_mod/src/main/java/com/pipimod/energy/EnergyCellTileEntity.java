@@ -19,6 +19,10 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     private EnergyStorage storage = new EnergyStorage(0, 0, 0, 0);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this);
     private int capacity = 0;
+    private int tickIn = 0;
+    private int tickOut = 0;
+    private int lastIn = 0;
+    private int lastOut = 0;
 
     private void sync() {
         if (level != null && !level.isClientSide) {
@@ -49,6 +53,14 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
 
     @Override
     public void tick() {
+        if (level != null && !level.isClientSide) {
+            lastIn = tickIn;
+            lastOut = tickOut;
+            tickIn = 0;
+            tickOut = 0;
+            setChanged();
+            sync();
+        }
     }
 
     @Override
@@ -76,6 +88,8 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         super.load(state, nbt);
         this.capacity = nbt.getInt("Capacity");
         int energy = nbt.getInt("Energy");
+        this.lastIn = nbt.getInt("LastIn");
+        this.lastOut = nbt.getInt("LastOut");
         setCapacity(capacity);
         setEnergy(energy);
     }
@@ -85,6 +99,8 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         super.save(nbt);
         nbt.putInt("Capacity", capacity);
         nbt.putInt("Energy", storage.getEnergyStored());
+        nbt.putInt("LastIn", lastIn);
+        nbt.putInt("LastOut", lastOut);
         return nbt;
     }
 
@@ -107,6 +123,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int r = storage.receiveEnergy(maxReceive, simulate);
         if (!simulate && r > 0) {
+            tickIn += r;
             setChanged();
             sync();
         }
@@ -117,6 +134,7 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     public int extractEnergy(int maxExtract, boolean simulate) {
         int e = storage.extractEnergy(maxExtract, simulate);
         if (!simulate && e > 0) {
+            tickOut += e;
             setChanged();
             sync();
         }
@@ -126,6 +144,16 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
     @Override
     public int getEnergyStored() {
         return storage.getEnergyStored();
+    }
+
+    /** Returns energy received during the last tick. */
+    public int getLastInput() {
+        return lastIn;
+    }
+
+    /** Returns energy extracted during the last tick. */
+    public int getLastOutput() {
+        return lastOut;
     }
 
     public void setEnergy(int amount) {

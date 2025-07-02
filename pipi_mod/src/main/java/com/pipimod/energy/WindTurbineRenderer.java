@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(EnergyMod.MODID, "textures/block/black.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(EnergyMod.MODID, "textures/block/wind_turbine_turbne.png");
     private final ModelRenderer blade1;
     private final ModelRenderer blade2;
 
@@ -29,7 +29,8 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         ms.pushPose();
         ms.translate(0.5D, 3.0D, 0.5D);
         float angle = tile.getRotation();
-        ms.mulPose(Vector3f.YP.rotationDegrees(angle));
+        ms.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
+        ms.mulPose(Vector3f.XP.rotationDegrees(angle));
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
         blade1.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
         blade2.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
