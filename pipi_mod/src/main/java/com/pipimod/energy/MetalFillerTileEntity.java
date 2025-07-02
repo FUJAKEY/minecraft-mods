@@ -52,14 +52,16 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
                 if (progress >= 100) {
                     ItemStack out = items.get(2);
                     ItemStack input = items.get(1);
-                    if (!input.isEmpty() && input.getItem() == Items.IRON_INGOT) {
+                    if (!input.isEmpty() && input.getItem() == Items.IRON_INGOT && carbon >= 40) {
                         if (out.isEmpty()) {
                             items.set(2, new ItemStack(ModItems.CAST_IRON_INGOT.get()));
+                            carbon -= 40;
                             input.shrink(1);
                             progress = 0;
                             setChanged();
                         } else if (out.getItem() == ModItems.CAST_IRON_INGOT.get() && out.getCount() < out.getMaxStackSize()) {
                             out.grow(1);
+                            carbon -= 40;
                             input.shrink(1);
                             progress = 0;
                             setChanged();
@@ -74,7 +76,6 @@ public class MetalFillerTileEntity extends LockableTileEntity implements ITickab
         } else {
             ItemStack input = items.get(1);
             if (!input.isEmpty() && input.getItem() == Items.IRON_INGOT && carbon >= 40 && energy.getEnergyStored() > 0) {
-                carbon -= 40;
                 progress = 1;
                 setChanged();
             }
