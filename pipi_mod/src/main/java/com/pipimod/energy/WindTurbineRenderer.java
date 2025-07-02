@@ -28,13 +28,13 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
     @Override
     public void render(WindTurbineTileEntity tile, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
         ms.pushPose();
-        ms.translate(0.5D, 3.0D, 0.5D);
-        float angle = tile.getRotation();
         Direction facing = tile.getBlockState().getValue(WindTurbineBlock.FACING);
-        Direction axis = facing.getClockWise();
-        float yaw = axis.toYRot() - 90.0F;
-        ms.mulPose(Vector3f.YP.rotationDegrees(yaw));
-        ms.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
+        float angle = tile.getRotation();
+        double offset = 0.75D;
+        ms.translate(0.5D + facing.getStepX() * offset,
+                     3.0D,
+                     0.5D + facing.getStepZ() * offset);
+        ms.mulPose(Vector3f.YP.rotationDegrees(facing.toYRot()));
         ms.mulPose(Vector3f.XP.rotationDegrees(angle));
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
         blade1.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
