@@ -31,7 +31,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
         // Static arm connecting the hub to the tower
         this.arm = new ModelRenderer(64, 64, 8, 22);
-        this.arm.addBox(-0.5F, -0.5F, -3.0F, 1, 1, 3, 0.0F);
+        this.arm.addBox(-0.5F, -0.5F, -4.0F, 1, 1, 4, 0.0F);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         // Position rotor in front of the top section
         ms.translate(0.5D, 2.9375D, 0.5D);
         ms.mulPose(Vector3f.YP.rotationDegrees(facing.toYRot()));
-        ms.translate(0.0D, 0.0D, -0.5D);
+        ms.translate(0.0D, 0.0D, 0.375D);
 
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
 
