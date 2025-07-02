@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Arrays;
 
 /**
- * Категория рецепта металлургического наполнителя для JEI.
+ * Recipe category for the Metal Filler shown in JEI.
  */
 public class MetalFillerCategory implements IRecipeCategory<MetalFillerRecipe> {
     public static final ResourceLocation UID = new ResourceLocation(EnergyMod.MODID, "metal_filler");

@@ -186,3 +186,8 @@ publishing {
         }
     }
 }
+
+// Ensure Java compilation uses UTF-8 to avoid encoding issues with non-ASCII comments
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
