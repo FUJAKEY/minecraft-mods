@@ -5,13 +5,11 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.util.ResourceLocation;
 import java.util.Collections;
 
 public class EnergyJeiPlugin implements IModPlugin {
     public static final ResourceLocation ID = new ResourceLocation(EnergyMod.MODID, "jei_plugin");
-    public static final RecipeType<MetalFillerRecipe> METAL_FILLER_TYPE = RecipeType.create(EnergyMod.MODID, "metal_filler", MetalFillerRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -26,6 +24,6 @@ public class EnergyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(METAL_FILLER_TYPE, Collections.singletonList(new MetalFillerRecipe()));
+        registration.addRecipes(Collections.singletonList(new MetalFillerRecipe()), MetalFillerCategory.UID);
     }
 }

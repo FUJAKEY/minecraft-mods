@@ -3,38 +3,45 @@ package com.pipimod.energy.jei;
 import com.pipimod.energy.EnergyMod;
 import com.pipimod.energy.ModBlocks;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IRecipeSlotBuilder;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.gui.IRecipeLayout;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
+import java.util.Arrays;
+
+/**
+ * Категория рецепта металлургического наполнителя для JEI.
+ */
 public class MetalFillerCategory implements IRecipeCategory<MetalFillerRecipe> {
     public static final ResourceLocation UID = new ResourceLocation(EnergyMod.MODID, "metal_filler");
+
     private final IDrawable background;
     private final IDrawable icon;
 
     public MetalFillerCategory(IGuiHelper helper) {
         this.background = helper.createBlankDrawable(150, 40);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.METAL_FILLER.get()));
+        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.METAL_FILLER.get()));
     }
 
     @Override
-    public RecipeType<MetalFillerRecipe> getRecipeType() {
-        return EnergyJeiPlugin.METAL_FILLER_TYPE;
+    public ResourceLocation getUid() {
+        return UID;
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new StringTextComponent("Metal Filler");
+    public Class<? extends MetalFillerRecipe> getRecipeClass() {
+        return MetalFillerRecipe.class;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Metal Filler";
     }
 
     @Override
@@ -48,14 +55,29 @@ public class MetalFillerCategory implements IRecipeCategory<MetalFillerRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, MetalFillerRecipe recipe, IFocusGroup focuses) {
-        IRecipeSlotBuilder fuel = builder.addSlot(RecipeIngredientRole.INPUT, 19, 12);
-        fuel.addItemStack(recipe.getFuel());
+    public void setIngredients(MetalFillerRecipe recipe, IIngredients ingredients) {
+        ingredients.setInputIngredients(Arrays.asList(
+                Ingredient.of(recipe.getFuel()),
+                Ingredient.of(recipe.getInput())
+        ));
+        ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput());
+    }
 
-        IRecipeSlotBuilder input = builder.addSlot(RecipeIngredientRole.INPUT, 55, 12);
-        input.addItemStack(recipe.getInput());
+    @Override
+    public void setRecipe(IRecipeLayout recipeLayout, MetalFillerRecipe recipe, IIngredients ingredients) {
+        IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
+        stacks.init(0, true, 19, 12);
+        stacks.set(0, recipe.getFuel());
 
-        IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 12);
-        output.addItemStack(recipe.getOutput());
+        stacks.init(1, true, 55, 12);
+        stacks.set(1, recipe.getInput());
+
+        stacks.init(2, false, 111, 12);
+        stacks.set(2, recipe.getOutput());
+    }
+
+    @Override
+    public boolean isHandled(MetalFillerRecipe recipe) {
+        return true;
     }
 }
