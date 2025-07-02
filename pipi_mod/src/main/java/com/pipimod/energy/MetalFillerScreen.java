@@ -48,7 +48,7 @@ public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
             blit(stack, x + 8, y + 38 - carbon, 176, 0, 14, carbon);
         }
 
-        int energy = Math.min(16, this.menu.getEnergy() * 16 / 10000);
+        int energy = Math.min(16, this.menu.getEnergy() * 16 / 1000);
         if (energy > 0) {
             blit(stack, x + 154, y + 38 - energy, 176, 0, 14, energy);
         }

@@ -50,5 +50,7 @@
   "book.energymod.wiki.page10": "All generators now produce half their previous power. Use /wiki for help and check the Energy Generator creative tab for every block.",
   "tooltip.energymod.carbon": "Carbon: %s",
   "tooltip.energymod.energy": "Energy: %s FE",
-  "message.energymod.efficiency": "Efficiency: %s%%"
+  "message.energymod.efficiency": "Efficiency: %s%%",
+  "message.energymod.generation": "Generation: %s FE/t",
+  "message.energymod.io": "In: %s FE/t Out: %s FE/t"
 }

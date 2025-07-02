@@ -46,5 +46,7 @@
   "book.energymod.wiki.page9": "Режими дротів: AUTO, TAKE, GIVE та DISABLED. AUTO балансує енергію між сусідами. Шифт‑клік інструментом відкриває налаштування.",
   "book.energymod.wiki.page10": "Усі генератори тепер виробляють лише половину попередньої потужності. Команда /wiki відкриє цю книжку, а у креативі є вкладка Energy Generator.",
   "tooltip.energymod.carbon": "Вуглець: %s",
-  "tooltip.energymod.energy": "Енергія: %s FE"
+  "tooltip.energymod.energy": "Енергія: %s FE",
+  "message.energymod.generation": "Генерація: %s FE/тік",
+  "message.energymod.io": "Вхід: %s FE/тік Вихід: %s FE/тік"
 }

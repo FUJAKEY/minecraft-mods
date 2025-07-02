@@ -25,7 +25,8 @@ import javax.annotation.Nullable;
 
 public class MetalFillerTileEntity extends LockableTileEntity implements ITickableTileEntity, IEnergyStorage, INamedContainerProvider {
     private final NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
-    private final EnergyStorage energy = new EnergyStorage(10000, 10000, 10000);
+    // Metal Filler holds up to 1000 FE and can transfer at the same rate
+    private final EnergyStorage energy = new EnergyStorage(1000, 1000, 1000);
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this);
     private int carbon;
     private int progress;

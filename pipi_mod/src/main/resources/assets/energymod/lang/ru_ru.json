@@ -50,5 +50,7 @@
   "book.energymod.wiki.page9": "Режимы проводов: AUTO, TAKE, GIVE и DISABLED. AUTO распределяет энергию между соседями. Шифт‑клик инструментом открывает настройки.",
   "book.energymod.wiki.page10": "Все генераторы теперь дают лишь половину прежней энергии. Используйте /wiki для справки и вкладку Energy Generator в креативе.",
   "tooltip.energymod.carbon": "Углерод: %s",
-  "tooltip.energymod.energy": "Энергия: %s FE"
+  "tooltip.energymod.energy": "Энергия: %s FE",
+  "message.energymod.generation": "Выработка: %s FE/тик",
+  "message.energymod.io": "Вход: %s FE/тик Выход: %s FE/тик"
 }
