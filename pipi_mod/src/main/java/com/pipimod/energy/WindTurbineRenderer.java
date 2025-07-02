@@ -31,11 +31,13 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         Direction facing = tile.getBlockState().getValue(WindTurbineBlock.FACING);
         float angle = tile.getRotation();
 
-        ms.translate(0.5D, 3.0D, 0.5D);
+        // Position at the front of the top section
+        ms.translate(0.5D, 2.9375D, 0.5D);
         ms.mulPose(Vector3f.YP.rotationDegrees(facing.toYRot()));
-        ms.translate(0.0D, 0.0D, -0.55D);
-        ms.mulPose(Vector3f.XP.rotationDegrees(90.0F));
-        ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
+        ms.translate(0.0D, 0.0D, -0.5D);
+
+        // Spin around the vertical (Y) axis
+        ms.mulPose(Vector3f.YP.rotationDegrees(angle));
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
         blade1.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
         blade2.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
