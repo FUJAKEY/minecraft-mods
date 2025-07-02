@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.Direction;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(EnergyMod.MODID, "textures/block/wind_turbine_turbne.png");
@@ -29,6 +30,10 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         ms.pushPose();
         ms.translate(0.5D, 3.0D, 0.5D);
         float angle = tile.getRotation();
+        Direction facing = tile.getBlockState().getValue(WindTurbineBlock.FACING);
+        Direction axis = facing.getClockWise();
+        float yaw = axis.toYRot() - 90.0F;
+        ms.mulPose(Vector3f.YP.rotationDegrees(yaw));
         ms.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
         ms.mulPose(Vector3f.XP.rotationDegrees(angle));
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
