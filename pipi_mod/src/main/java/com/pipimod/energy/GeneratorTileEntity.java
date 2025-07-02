@@ -110,4 +110,19 @@ public abstract class GeneratorTileEntity extends TileEntity implements ITickabl
     @Override public int getMaxEnergyStored() { return storage.getMaxEnergyStored(); }
     @Override public boolean canExtract() { return true; }
     @Override public boolean canReceive() { return false; }
+
+    /**
+     * Returns the amount of energy this generator produces each tick based on
+     * its configured rate and current efficiency.
+     */
+    public int getGenerationPerTick() {
+        return generateRate * getEfficiency() / 100 / 2;
+    }
+
+    /**
+     * Base generation rate before efficiency and global modifiers.
+     */
+    public int getBaseGenerationRate() {
+        return generateRate;
+    }
 }

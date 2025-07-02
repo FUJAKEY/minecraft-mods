@@ -16,6 +16,10 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -110,6 +114,22 @@ public class EnergyWireBlock extends Block {
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
         return buildShape(state);
+    }
+
+    @Override
+    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (!world.isClientSide && entity instanceof LivingEntity) {
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof WireBlockEntity) {
+                WireBlockEntity wire = (WireBlockEntity) te;
+                if (wire.getEnergyStored() > 0) {
+                    entity.hurt(EnergyDamageSources.ELECTRIC_SHOCK, 2.0F);
+                    Vector3d dir = entity.position().subtract(Vector3d.atCenterOf(pos)).normalize().scale(1.2);
+                    entity.push(dir.x, 0.5, dir.z);
+                }
+            }
+        }
+        super.entityInside(state, world, pos, entity);
     }
 
     @Override

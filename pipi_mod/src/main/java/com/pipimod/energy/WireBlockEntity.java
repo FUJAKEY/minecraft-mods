@@ -74,54 +74,73 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             totalEnergy += w.storage.getEnergyStored();
         }
 
-        // Pull from TAKE sides or AUTO connected to external blocks
+        java.util.List<IEnergyStorage> inputs = new java.util.ArrayList<>();
+        java.util.List<IEnergyStorage> outputs = new java.util.ArrayList<>();
+        java.util.List<IEnergyStorage> autos = new java.util.ArrayList<>();
+
         for (WireBlockEntity w : network) {
             for (Direction dir : Direction.values()) {
                 WireMode mode = w.modes.get(dir);
                 if (mode == WireMode.DISABLED) continue;
-                boolean treatAsTake = mode == WireMode.TAKE;
                 TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
-                if (te != null) {
-                    boolean external = !(te instanceof WireBlockEntity);
+                if (te != null && !(te instanceof WireBlockEntity)) {
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
                     if (cap != null) {
-                        if (mode == WireMode.AUTO && external) treatAsTake = true;
-                        if (treatAsTake) {
-                            int space = capacity - totalEnergy;
-                            if (space > 0) {
-                                int pulled = cap.extractEnergy(Math.min(space, TRANSFER_RATE), false);
-                                if (pulled > 0) {
-                                    totalEnergy += pulled;
-                                }
-                            }
+                        switch (mode) {
+                            case TAKE:
+                                inputs.add(cap);
+                                break;
+                            case GIVE:
+                                outputs.add(cap);
+                                break;
+                            case AUTO:
+                                autos.add(cap);
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
             }
         }
 
-        // Gather all output targets
-        java.util.List<IEnergyStorage> outputs = new java.util.ArrayList<>();
-        for (WireBlockEntity w : network) {
-            for (Direction dir : Direction.values()) {
-                WireMode mode = w.modes.get(dir);
-                if (mode == WireMode.DISABLED) continue;
-                if (mode == WireMode.TAKE) continue;
-                TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
-                if (te != null && !(te instanceof WireBlockEntity)) {
-                    IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
-                    if (cap != null) outputs.add(cap);
-                }
+        for (IEnergyStorage in : inputs) {
+            if (totalEnergy >= capacity) break;
+            int pulled = in.extractEnergy(Math.min(TRANSFER_RATE, capacity - totalEnergy), false);
+            if (pulled > 0) {
+                totalEnergy += pulled;
             }
         }
 
-        // Distribute energy fairly between outputs
-        for (int i = 0; i < outputs.size() && totalEnergy > 0; i++) {
-            IEnergyStorage cap = outputs.get(i);
-            int share = Math.min(TRANSFER_RATE, totalEnergy / (outputs.size() - i));
-            int sent = cap.receiveEnergy(share, false);
+        java.util.Set<IEnergyStorage> usedAutos = new java.util.HashSet<>();
+
+        for (IEnergyStorage out : outputs) {
+            int demand = Math.min(TRANSFER_RATE, out.receiveEnergy(TRANSFER_RATE, true));
+            while (totalEnergy < demand && !autos.isEmpty()) {
+                IEnergyStorage auto = autos.get(0);
+                int space = capacity - totalEnergy;
+                if (space <= 0) break;
+                int pulled = auto.extractEnergy(Math.min(Math.min(space, TRANSFER_RATE), demand - totalEnergy), false);
+                if (pulled > 0) {
+                    usedAutos.add(auto);
+                    totalEnergy += pulled;
+                } else {
+                    autos.remove(0);
+                }
+            }
+            if (totalEnergy <= 0) break;
+            int send = Math.min(demand, totalEnergy);
+            int sent = out.receiveEnergy(send, false);
             totalEnergy -= sent;
         }
+
+        for (IEnergyStorage auto : autos) {
+            if (usedAutos.contains(auto)) continue;
+            if (totalEnergy <= 0) break;
+            int sent = auto.receiveEnergy(Math.min(TRANSFER_RATE, totalEnergy), false);
+            totalEnergy -= sent;
+        }
+
 
         // Evenly distribute remaining energy to wires
         int per = totalEnergy / network.size();

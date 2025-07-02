@@ -14,6 +14,26 @@ public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
     }
 
     @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        if (isHovering(8, 22, 14, 16, mouseX, mouseY) && this.menu.getCarbon() > 0) {
+            this.renderTooltip(stack, new net.minecraft.util.text.TranslationTextComponent(
+                    "tooltip.energymod.carbon", this.menu.getCarbon()), mouseX, mouseY);
+        }
+        if (isHovering(154, 22, 14, 16, mouseX, mouseY) && this.menu.getEnergy() > 0) {
+            this.renderTooltip(stack, new net.minecraft.util.text.TranslationTextComponent(
+                    "tooltip.energymod.energy", this.menu.getEnergy()), mouseX, mouseY);
+        }
+        this.renderTooltip(stack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
+    }
+
+    @Override
     protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         this.minecraft.getTextureManager().bind(TEXTURE);
         int x = (this.width - this.imageWidth) / 2;
@@ -23,10 +43,14 @@ public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
         int k = this.menu.getProgress() * 24 / 100;
         blit(stack, x + 100, y + 34, 176, 14, k + 1, 16);
 
-        int carbon = this.menu.getCarbon() * 14 / 500;
-        blit(stack, x + 8, y + 36 - carbon, 176, 0, 14, carbon);
+        int carbon = this.menu.getCarbon() * 16 / 500;
+        if (carbon > 0) {
+            blit(stack, x + 8, y + 38 - carbon, 176, 0, 14, carbon);
+        }
 
-        int energy = Math.min(14, this.menu.getEnergy() * 14 / 10000);
-        blit(stack, x + 154, y + 36 - energy, 176, 0, 14, energy);
+        int energy = Math.min(16, this.menu.getEnergy() * 16 / 1000);
+        if (energy > 0) {
+            blit(stack, x + 154, y + 38 - energy, 176, 0, 14, energy);
+        }
     }
 }
