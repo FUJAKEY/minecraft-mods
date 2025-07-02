@@ -20,9 +20,11 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
     public WindTurbineRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
         this.blade1 = new ModelRenderer(64, 64, 0, 0);
-        this.blade1.addBox(-12.0F, -1.0F, -1.0F, 24, 2, 2, 0.0F);
-        this.blade2 = new ModelRenderer(64, 64, 0, 4);
-        this.blade2.addBox(-1.0F, -1.0F, -12.0F, 2, 2, 24, 0.0F);
+        // Vertical blade running north-south
+        this.blade1.addBox(-1.0F, -12.0F, -12.0F, 2, 24, 24, 0.0F);
+        this.blade2 = new ModelRenderer(64, 64, 0, 48);
+        // Vertical blade running east-west
+        this.blade2.addBox(-12.0F, -12.0F, -1.0F, 24, 24, 2, 0.0F);
     }
 
     @Override
