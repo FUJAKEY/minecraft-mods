@@ -52,12 +52,12 @@ public class ThermalGeneratorTileEntity extends GeneratorTileEntity {
         float temp = biome.getBaseTemperature();
         if (temp < 0.15f) return 0;
 
-        if (biome.getBiomeCategory() == Biome.Category.DESERT) {
-            return 60;
-        }
-
         if (!level.isDay()) {
             return 10;
+        }
+
+        if (biome.getBiomeCategory() == Biome.Category.DESERT) {
+            return 60;
         }
 
         return 50;

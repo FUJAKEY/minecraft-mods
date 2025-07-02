@@ -14,6 +14,28 @@ public class MetalFillerScreen extends ContainerScreen<MetalFillerContainer> {
     }
 
     @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderTooltip(stack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
+        if (isHovering(8, 22, 14, 14, mouseX, mouseY)) {
+            this.renderTooltip(stack, new net.minecraft.util.text.TranslationTextComponent(
+                    "tooltip.energymod.carbon", this.menu.getCarbon()), mouseX, mouseY);
+        }
+        if (isHovering(154, 22, 14, 14, mouseX, mouseY)) {
+            this.renderTooltip(stack, new net.minecraft.util.text.TranslationTextComponent(
+                    "tooltip.energymod.energy", this.menu.getEnergy()), mouseX, mouseY);
+        }
+    }
+
+    @Override
     protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         this.minecraft.getTextureManager().bind(TEXTURE);
         int x = (this.width - this.imageWidth) / 2;
