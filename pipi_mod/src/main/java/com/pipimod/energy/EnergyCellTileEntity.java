@@ -88,6 +88,8 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         super.load(state, nbt);
         this.capacity = nbt.getInt("Capacity");
         int energy = nbt.getInt("Energy");
+        this.lastIn = nbt.getInt("LastIn");
+        this.lastOut = nbt.getInt("LastOut");
         setCapacity(capacity);
         setEnergy(energy);
     }
@@ -97,6 +99,8 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
         super.save(nbt);
         nbt.putInt("Capacity", capacity);
         nbt.putInt("Energy", storage.getEnergyStored());
+        nbt.putInt("LastIn", lastIn);
+        nbt.putInt("LastOut", lastOut);
         return nbt;
     }
 
