@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.Comparator;
 
 public class WireBlockEntity extends TileEntity implements ITickableTileEntity, IEnergyStorage {
     private static final int CAPACITY = 1280;
@@ -59,11 +60,24 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public void tick() {
         if (level == null || level.isClientSide) return;
-        long time = level.getGameTime();
-        if (lastNetworkTick == time) return;
 
-        Set<WireBlockEntity> network = new HashSet<>();
-        collectNetwork(network);
+        Set<WireBlockEntity> network = EnergyNetwork.getNetwork(this);
+        if (network.isEmpty()) return;
+
+        // Let the wire with the smallest position coordinate process the network
+        WireBlockEntity leader = network.stream()
+                .min(Comparator.comparing(w -> w.worldPosition.asLong()))
+                .orElse(this);
+        if (this != leader) return;
+
+        runNetworkTick(network);
+    }
+
+    private static void runNetworkTick(Set<WireBlockEntity> network) {
+        WireBlockEntity any = network.iterator().next();
+        long time = any.level.getGameTime();
+        if (any.lastNetworkTick == time) return;
+
         for (WireBlockEntity w : network) {
             w.lastNetworkTick = time;
         }
@@ -140,7 +154,6 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
             int sent = auto.receiveEnergy(Math.min(TRANSFER_RATE, totalEnergy), false);
             totalEnergy -= sent;
         }
-
 
         // Evenly distribute remaining energy to wires
         int per = totalEnergy / network.size();

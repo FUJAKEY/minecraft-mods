@@ -123,13 +123,20 @@ public class EnergyWireBlock extends Block {
             if (te instanceof WireBlockEntity) {
                 WireBlockEntity wire = (WireBlockEntity) te;
                 if (wire.getEnergyStored() > 0) {
-                    entity.hurt(EnergyDamageSources.ELECTRIC_SHOCK, 2.0F);
-                    Vector3d dir = entity.position().subtract(Vector3d.atCenterOf(pos)).normalize().scale(1.2);
-                    entity.push(dir.x, 0.5, dir.z);
+                    applyElectricShock((LivingEntity) entity, pos);
                 }
             }
         }
         super.entityInside(state, world, pos, entity);
+    }
+
+    private static void applyElectricShock(LivingEntity entity, BlockPos pos) {
+        // Inflict constant damage bypassing armor
+        entity.hurt(EnergyDamageSources.ELECTRIC_SHOCK, 2.0F);
+
+        // Knock the entity away from the wire
+        Vector3d vec = entity.position().subtract(Vector3d.atCenterOf(pos)).normalize();
+        entity.push(vec.x * 0.7, 0.4, vec.z * 0.7);
     }
 
     @Override
