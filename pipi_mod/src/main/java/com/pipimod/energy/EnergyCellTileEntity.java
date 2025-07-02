@@ -53,10 +53,14 @@ public class EnergyCellTileEntity extends TileEntity implements ITickableTileEnt
 
     @Override
     public void tick() {
-        lastIn = tickIn;
-        lastOut = tickOut;
-        tickIn = 0;
-        tickOut = 0;
+        if (level != null && !level.isClientSide) {
+            lastIn = tickIn;
+            lastOut = tickOut;
+            tickIn = 0;
+            tickOut = 0;
+            setChanged();
+            sync();
+        }
     }
 
     @Override
