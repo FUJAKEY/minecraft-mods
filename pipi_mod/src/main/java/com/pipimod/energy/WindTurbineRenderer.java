@@ -14,17 +14,13 @@ import net.minecraft.util.Direction;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(EnergyMod.MODID, "textures/block/wind_turbine_turbne.png");
-    private final ModelRenderer blade1;
-    private final ModelRenderer blade2;
-
+    private final ModelRenderer blade;
+    
     public WindTurbineRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
-        this.blade1 = new ModelRenderer(64, 64, 0, 0);
-        // Vertical blade running north-south
-        this.blade1.addBox(-1.0F, -12.0F, -12.0F, 2, 24, 24, 0.0F);
-        this.blade2 = new ModelRenderer(64, 64, 0, 48);
-        // Vertical blade running east-west
-        this.blade2.addBox(-12.0F, -12.0F, -1.0F, 24, 24, 2, 0.0F);
+        // Single thin blade rendered three times with rotation
+        this.blade = new ModelRenderer(64, 64, 0, 0);
+        this.blade.addBox(-0.5F, -8.0F, 0.0F, 1, 16, 2, 0.0F);
     }
 
     @Override
@@ -33,16 +29,21 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
         Direction facing = tile.getBlockState().getValue(WindTurbineBlock.FACING);
         float angle = tile.getRotation();
 
-        // Position at the front of the top section
+        // Position rotor in front of the top section
         ms.translate(0.5D, 2.9375D, 0.5D);
         ms.mulPose(Vector3f.YP.rotationDegrees(facing.toYRot()));
-        ms.translate(0.0D, 0.0D, -0.5D);
+        ms.translate(0.0D, 0.0D, -0.75D);
 
-        // Spin around the vertical (Y) axis
-        ms.mulPose(Vector3f.YP.rotationDegrees(angle));
+        // Rotate blades around the facing axis
+        ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
         IVertexBuilder vb = buffer.getBuffer(RenderType.entityCutout(TEXTURE));
-        blade1.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
-        blade2.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
+
+        for (int i = 0; i < 3; i++) {
+            ms.pushPose();
+            ms.mulPose(Vector3f.ZP.rotationDegrees(i * 120f));
+            blade.render(ms, vb, light, OverlayTexture.NO_OVERLAY);
+            ms.popPose();
+        }
         ms.popPose();
     }
 }
