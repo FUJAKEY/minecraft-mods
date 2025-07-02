@@ -85,7 +85,9 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                     boolean external = !(te instanceof WireBlockEntity);
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
                     if (cap != null) {
-                        if (mode == WireMode.AUTO && external) treatAsTake = true;
+                        if (mode == WireMode.AUTO && external) {
+                            treatAsTake = cap.getEnergyStored() > w.storage.getEnergyStored();
+                        }
                         if (treatAsTake) {
                             int space = capacity - totalEnergy;
                             if (space > 0) {
@@ -110,7 +112,15 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
                 TileEntity te = w.level.getBlockEntity(w.worldPosition.relative(dir));
                 if (te != null && !(te instanceof WireBlockEntity)) {
                     IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).orElse(null);
-                    if (cap != null) outputs.add(cap);
+                    if (cap != null) {
+                        if (mode == WireMode.AUTO) {
+                            if (w.storage.getEnergyStored() > cap.getEnergyStored()) {
+                                outputs.add(cap);
+                            }
+                        } else {
+                            outputs.add(cap);
+                        }
+                    }
                 }
             }
         }
