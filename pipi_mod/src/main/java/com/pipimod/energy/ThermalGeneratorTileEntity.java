@@ -26,32 +26,41 @@ public class ThermalGeneratorTileEntity extends GeneratorTileEntity {
         if (level == null) return 0;
         Biome biome = level.getBiome(worldPosition);
 
+        boolean nearHotBlock = false;
+        boolean nearWaterOrSnow = false;
+
+        for (BlockPos p : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1))) {
+            BlockState state = level.getBlockState(p);
+            if (state.getBlock() == Blocks.MAGMA_BLOCK || state.getBlock() == Blocks.FIRE ||
+                state.getBlock() == Blocks.LAVA || state.getFluidState().getType() == Fluids.LAVA) {
+                nearHotBlock = true;
+            }
+            if (state.getBlock() == Blocks.WATER || state.getFluidState().getType() == Fluids.WATER ||
+                state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.SNOW) {
+                nearWaterOrSnow = true;
+            }
+        }
+
+        if (nearHotBlock) return 80;
+        if (nearWaterOrSnow) return 0;
+
         // Check if biome is in the cold blacklist
         if (isColdBiome(biome)) {
             return 0;
         }
 
-        boolean nearWaterOrSnow = false;
-        boolean nearHotBlock = false;
-
-        for (BlockPos p : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1))) {
-            BlockState state = level.getBlockState(p);
-            if (state.getBlock() == Blocks.WATER || state.getFluidState().getType() == Fluids.WATER ||
-                state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.SNOW) {
-                nearWaterOrSnow = true;
-            }
-            if (state.getBlock() == Blocks.MAGMA_BLOCK || state.getBlock() == Blocks.FIRE ||
-                state.getBlock() == Blocks.LAVA || state.getFluidState().getType() == Fluids.LAVA) {
-                nearHotBlock = true;
-            }
-        }
-
-        if (nearWaterOrSnow) return 0;
-        if (nearHotBlock) return 80;
-
         float temp = biome.getBaseTemperature();
         if (temp < 0.15f) return 0;
-        return biome.getBiomeCategory() == Biome.Category.DESERT ? 60 : 50;
+
+        if (biome.getBiomeCategory() == Biome.Category.DESERT) {
+            return 60;
+        }
+
+        if (!level.isDay()) {
+            return 10;
+        }
+
+        return 50;
     }
 
     private boolean isColdBiome(Biome biome) {
