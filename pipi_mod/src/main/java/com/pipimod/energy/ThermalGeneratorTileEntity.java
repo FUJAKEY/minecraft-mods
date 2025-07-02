@@ -52,7 +52,9 @@ public class ThermalGeneratorTileEntity extends GeneratorTileEntity {
         float temp = biome.getBaseTemperature();
         if (temp < 0.15f) return 0;
 
-        if (!level.isDay()) {
+        long time = level.getDayTime() % 24000L;
+        boolean night = time >= 13000L && time < 24000L;
+        if (night) {
             return 10;
         }
 
