@@ -63,7 +63,7 @@ public class WindTurbineBlock extends Block {
                 ctx.getLevel().getBlockState(pos.above()).isAir() &&
                 ctx.getLevel().getBlockState(pos.above(2)).isAir()) {
             return this.defaultBlockState()
-                    .setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+                    .setValue(FACING, ctx.getHorizontalDirection());
         }
         return null;
     }
