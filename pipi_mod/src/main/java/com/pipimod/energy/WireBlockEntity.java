@@ -128,24 +128,40 @@ public class WireBlockEntity extends TileEntity implements ITickableTileEntity, 
 
         java.util.Set<IEnergyStorage> usedAutos = new java.util.HashSet<>();
 
-        for (IEnergyStorage out : outputs) {
-            int demand = Math.min(TRANSFER_RATE, out.receiveEnergy(TRANSFER_RATE, true));
-            while (totalEnergy < demand && !autos.isEmpty()) {
-                IEnergyStorage auto = autos.get(0);
-                int space = capacity - totalEnergy;
-                if (space <= 0) break;
-                int pulled = auto.extractEnergy(Math.min(Math.min(space, TRANSFER_RATE), demand - totalEnergy), false);
-                if (pulled > 0) {
-                    usedAutos.add(auto);
-                    totalEnergy += pulled;
-                } else {
-                    autos.remove(0);
+        // Attempt to deliver energy to all outputs fairly. We keep looping as
+        // long as есть прогресс и энергия в сети
+        boolean progress = true;
+        int passes = 0;
+        while (progress && totalEnergy > 0 && passes < outputs.size()) {
+            progress = false;
+            passes++;
+            for (IEnergyStorage out : outputs) {
+                if (totalEnergy <= 0) break;
+
+                int demand = Math.min(TRANSFER_RATE, out.receiveEnergy(TRANSFER_RATE, true));
+
+                while (totalEnergy < demand && !autos.isEmpty()) {
+                    IEnergyStorage auto = autos.get(0);
+                    int space = capacity - totalEnergy;
+                    if (space <= 0) break;
+                    int pulled = auto.extractEnergy(Math.min(Math.min(space, TRANSFER_RATE), demand - totalEnergy), false);
+                    if (pulled > 0) {
+                        usedAutos.add(auto);
+                        totalEnergy += pulled;
+                    } else {
+                        autos.remove(0);
+                    }
+                }
+
+                if (totalEnergy <= 0) break;
+
+                int send = Math.min(demand, totalEnergy);
+                int sent = out.receiveEnergy(send, false);
+                if (sent > 0) {
+                    totalEnergy -= sent;
+                    progress = true;
                 }
             }
-            if (totalEnergy <= 0) break;
-            int send = Math.min(demand, totalEnergy);
-            int sent = out.receiveEnergy(send, false);
-            totalEnergy -= sent;
         }
 
         for (IEnergyStorage auto : autos) {
