@@ -1,18 +1,18 @@
 {
   "variants": {
-    "part=base,facing=north": { "model": "energymod:block/wind_turbine", "y": 180 },
-    "part=base,facing=east":  { "model": "energymod:block/wind_turbine", "y": 90 },
-    "part=base,facing=south": { "model": "energymod:block/wind_turbine", "y": 0 },
-    "part=base,facing=west":  { "model": "energymod:block/wind_turbine", "y": 270 },
+    "part=base,facing=north": { "model": "energymod:block/wind_turbine", "y": 0 },
+    "part=base,facing=east":  { "model": "energymod:block/wind_turbine", "y": 270 },
+    "part=base,facing=south": { "model": "energymod:block/wind_turbine", "y": 180 },
+    "part=base,facing=west":  { "model": "energymod:block/wind_turbine", "y": 90 },
 
-    "part=middle,facing=north": { "model": "energymod:block/wind_turbine_middle", "y": 180 },
-    "part=middle,facing=east":  { "model": "energymod:block/wind_turbine_middle", "y": 90 },
-    "part=middle,facing=south": { "model": "energymod:block/wind_turbine_middle", "y": 0 },
-    "part=middle,facing=west":  { "model": "energymod:block/wind_turbine_middle", "y": 270 },
+    "part=middle,facing=north": { "model": "energymod:block/wind_turbine_middle", "y": 0 },
+    "part=middle,facing=east":  { "model": "energymod:block/wind_turbine_middle", "y": 270 },
+    "part=middle,facing=south": { "model": "energymod:block/wind_turbine_middle", "y": 180 },
+    "part=middle,facing=west":  { "model": "energymod:block/wind_turbine_middle", "y": 90 },
 
-    "part=top,facing=north": { "model": "energymod:block/wind_turbine_top", "y": 180 },
-    "part=top,facing=east":  { "model": "energymod:block/wind_turbine_top", "y": 90 },
-    "part=top,facing=south": { "model": "energymod:block/wind_turbine_top", "y": 0 },
-    "part=top,facing=west":  { "model": "energymod:block/wind_turbine_top", "y": 270 }
+    "part=top,facing=north": { "model": "energymod:block/wind_turbine_top", "y": 0 },
+    "part=top,facing=east":  { "model": "energymod:block/wind_turbine_top", "y": 270 },
+    "part=top,facing=south": { "model": "energymod:block/wind_turbine_top", "y": 180 },
+    "part=top,facing=west":  { "model": "energymod:block/wind_turbine_top", "y": 90 }
   }
 }
