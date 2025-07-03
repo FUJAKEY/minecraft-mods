@@ -10,6 +10,7 @@
   "message.energymod.auto": "Автоматический режим",
   "message.energymod.energy": "%s/%s FE",
   "message.energymod.wireinfo": "Режим %s - %s/%s FE",
+  "message.energymod.networkinfo": "Сеть: %s/%s FE (%s проводов)",
   "wiremode.auto": "Авто",
   "wiremode.take": "Забирать",
   "wiremode.give": "Отдавать",
