@@ -62,8 +62,19 @@ public class WindTurbineBlock extends Block {
         if (pos.getY() < ctx.getLevel().getMaxBuildHeight() - 2 &&
                 ctx.getLevel().getBlockState(pos.above()).isAir() &&
                 ctx.getLevel().getBlockState(pos.above(2)).isAir()) {
-            return this.defaultBlockState()
-                    .setValue(FACING, ctx.getHorizontalDirection());
+            Direction facing;
+            PlayerEntity player = ctx.getPlayer();
+            if (player != null) {
+                double dx = player.getX() - (pos.getX() + 0.5);
+                double dz = player.getZ() - (pos.getZ() + 0.5);
+                facing = Direction.fromYRot(Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
+                if (!facing.getAxis().isHorizontal()) {
+                    facing = ctx.getHorizontalDirection().getOpposite();
+                }
+            } else {
+                facing = ctx.getHorizontalDirection().getOpposite();
+            }
+            return this.defaultBlockState().setValue(FACING, facing);
         }
         return null;
     }

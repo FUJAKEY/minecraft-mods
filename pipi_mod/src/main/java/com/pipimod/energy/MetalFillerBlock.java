@@ -43,7 +43,17 @@ public class MetalFillerBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+        PlayerEntity player = context.getPlayer();
+        if (player != null) {
+            BlockPos pos = context.getClickedPos();
+            double dx = player.getX() - (pos.getX() + 0.5);
+            double dz = player.getZ() - (pos.getZ() + 0.5);
+            Direction facing = Direction.fromYRot(Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
+            if (facing.getAxis().isHorizontal()) {
+                return this.defaultBlockState().setValue(FACING, facing);
+            }
+        }
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
