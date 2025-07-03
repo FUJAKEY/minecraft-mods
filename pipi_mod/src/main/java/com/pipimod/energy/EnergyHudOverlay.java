@@ -50,6 +50,16 @@ public class EnergyHudOverlay {
                 String modeStr = new net.minecraft.util.text.TranslationTextComponent("wiremode." + mode.name().toLowerCase()).getString();
                 String text = new net.minecraft.util.text.TranslationTextComponent("message.energymod.wireinfo", modeStr, wire.getDisplayEnergy(), wire.getMaxEnergyStored()).getString();
                 font.draw(stack, text, width / 2f - font.width(text) / 2f, height / 2f, 0xFFFFFF);
+
+                java.util.Set<WireBlockEntity> network = EnergyNetwork.getNetwork(wire);
+                int total = 0;
+                for (WireBlockEntity w : network) {
+                    total += w.getEnergyStored();
+                }
+                int capacity = network.size() * wire.getMaxEnergyStored();
+                String netText = new net.minecraft.util.text.TranslationTextComponent(
+                        "message.energymod.networkinfo", total, capacity, network.size()).getString();
+                font.draw(stack, netText, width / 2f - font.width(netText) / 2f, height / 2f + 12, 0xFFFFFF);
             }
         }
     }

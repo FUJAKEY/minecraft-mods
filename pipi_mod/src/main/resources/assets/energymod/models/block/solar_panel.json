@@ -1,6 +1,11 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube",
   "textures": {
-    "all": "energymod:block/solar_panel"
+    "up": "energymod:block/solar_panel_up",
+    "down": "energymod:block/solar_panel_all",
+    "north": "energymod:block/solar_panel_all",
+    "east": "energymod:block/solar_panel_all",
+    "south": "energymod:block/solar_panel_all",
+    "west": "energymod:block/solar_panel_all"
   }
 }
