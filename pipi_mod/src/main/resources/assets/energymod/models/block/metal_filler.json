@@ -1,6 +1,11 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube",
   "textures": {
-    "all": "energymod:block/metal_filler"
+    "up": "energymod:block/metal_filler_all",
+    "down": "energymod:block/metal_filler_all",
+    "north": "energymod:block/metal_filler_front",
+    "south": "energymod:block/metal_filler_all",
+    "east": "energymod:block/metal_filler_all",
+    "west": "energymod:block/metal_filler_all"
   }
 }

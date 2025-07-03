@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "energymod:block/metal_filler" }
+    "facing=north": { "model": "energymod:block/metal_filler", "y": 180 },
+    "facing=east":  { "model": "energymod:block/metal_filler", "y": 90 },
+    "facing=south": { "model": "energymod:block/metal_filler", "y": 0 },
+    "facing=west":  { "model": "energymod:block/metal_filler", "y": 270 }
   }
 }
