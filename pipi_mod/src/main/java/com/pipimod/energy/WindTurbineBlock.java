@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.state.EnumProperty;
+import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.Property;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +15,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.entity.LivingEntity;
@@ -35,6 +38,7 @@ public class WindTurbineBlock extends Block {
     }
 
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape BASE_SHAPE = Block.box(0, 0, 0, 16, 16, 16);
     private static final VoxelShape MIDDLE_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
@@ -46,7 +50,9 @@ public class WindTurbineBlock extends Block {
 
     public WindTurbineBlock() {
         super(Properties.of(Material.METAL).strength(2f).noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.BASE));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(PART, Part.BASE)
+                .setValue(FACING, Direction.NORTH));
     }
 
     @Nullable
@@ -56,15 +62,17 @@ public class WindTurbineBlock extends Block {
         if (pos.getY() < ctx.getLevel().getMaxBuildHeight() - 2 &&
                 ctx.getLevel().getBlockState(pos.above()).isAir() &&
                 ctx.getLevel().getBlockState(pos.above(2)).isAir()) {
-            return this.defaultBlockState();
+            return this.defaultBlockState()
+                    .setValue(FACING, ctx.getHorizontalDirection().getOpposite());
         }
         return null;
     }
 
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.MIDDLE), 3);
-        world.setBlock(pos.above(2), this.defaultBlockState().setValue(PART, Part.TOP), 3);
+        Direction facing = state.getValue(FACING);
+        world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.MIDDLE).setValue(FACING, facing), 3);
+        world.setBlock(pos.above(2), this.defaultBlockState().setValue(PART, Part.TOP).setValue(FACING, facing), 3);
     }
 
     @Override
@@ -87,7 +95,7 @@ public class WindTurbineBlock extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(PART);
+        builder.add(PART, FACING);
     }
 
     @Override

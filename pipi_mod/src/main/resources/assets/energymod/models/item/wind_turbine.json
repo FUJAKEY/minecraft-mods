@@ -1,3 +1,15 @@
 {
-  "parent": "energymod:block/wind_turbine_tower"
+  "parent": "energymod:block/wind_turbine_tower",
+  "display": {
+    "thirdperson": {
+      "rotation": [ 10, -45, 170 ],
+      "translation": [ 0, 2, 0 ],
+      "scale": [ 0.35, 0.35, 0.35 ]
+    },
+    "firstperson": {
+      "rotation": [ 0, -45, 0 ],
+      "translation": [ 1, 1, 0 ],
+      "scale": [ 0.35, 0.35, 0.35 ]
+    }
+  }
 }
