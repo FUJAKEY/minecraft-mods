@@ -7,6 +7,7 @@ public class BladderData implements IBladderData {
     private float capacity = 120f;
     private boolean urinating = false;
     private int ticksSinceSync = 0;
+    private int passiveFillTicks = 0;
 
     @Override
     public float getLevel() {
@@ -65,6 +66,7 @@ public class BladderData implements IBladderData {
         tag.putFloat("Level", level);
         tag.putFloat("Capacity", capacity);
         tag.putBoolean("Urinating", urinating);
+        tag.putInt("PassiveTicks", passiveFillTicks);
         return tag;
     }
 
@@ -73,6 +75,7 @@ public class BladderData implements IBladderData {
         level = tag.getFloat("Level");
         capacity = tag.contains("Capacity") ? tag.getFloat("Capacity") : capacity;
         urinating = tag.getBoolean("Urinating");
+        passiveFillTicks = tag.contains("PassiveTicks") ? tag.getInt("PassiveTicks") : passiveFillTicks;
     }
 
     @Override
@@ -83,6 +86,16 @@ public class BladderData implements IBladderData {
     @Override
     public void setTicksSinceSync(int ticks) {
         this.ticksSinceSync = Math.max(0, ticks);
+    }
+
+    @Override
+    public int getPassiveFillTicks() {
+        return passiveFillTicks;
+    }
+
+    @Override
+    public void setPassiveFillTicks(int ticks) {
+        this.passiveFillTicks = Math.max(0, ticks);
     }
 
     private float clamp(float value, float min, float max) {

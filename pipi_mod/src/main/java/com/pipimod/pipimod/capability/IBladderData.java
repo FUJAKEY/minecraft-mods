@@ -23,6 +23,10 @@ public interface IBladderData {
 
     void readTag(CompoundNBT tag);
 
+    int getPassiveFillTicks();
+
+    void setPassiveFillTicks(int ticks);
+
     int getTicksSinceSync();
 
     void setTicksSinceSync(int ticks);
