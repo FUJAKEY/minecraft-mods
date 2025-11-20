@@ -29,12 +29,12 @@ displayName="Pipi Mod" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Design, UX и программирование" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="Pipi Mod Team" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Этот мод добавляет систему мочеиспускания для игрока. Есть индикатор переполнения мочевого пузыря, возможность "писать" по нажатию клавиши и взаимодействие струи с миром: тушение огня, оставление мокрых следов и прочие эффекты. Чем дольше терпеть, тем выше риск получить негативные эффекты.
+Дает игроку полноценную систему мочевого пузыря: заполнение, несколько этапов дискомфорта, выделенный индикатор и горячую клавишу для контролируемого процесса. Струя получает гравитацию и инерцию, тушит огонь, смачивает блоки и замедляет мобов. Если терпеть слишком долго — начинаются дебаффы и принудительное мочеиспускание.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.pipimod]] #optional
