@@ -1,0 +1,19 @@
+modLoader="javafml"
+loaderVersion="[36,)" # Forge loader for 1.16.5
+license="MIT"
+[[mods]]
+modId="industrialsynergy"
+version="1.0.0"
+displayName="IndustrialSynergy"
+description='''
+IndustrialSynergy добавляет индустриальные машины, энерго-систему, кабели и генераторы с совместимостью Forge Energy/Mekanism.
+'''
+# Optional update checker URL
+updateJSONURL=""
+# Dependency on Minecraft 1.16.5
+[[dependencies.industrialsynergy]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialsynergy:textures/block/crusher_front",
+    "down": "industrialsynergy:textures/block/machine_side",
+    "up": "industrialsynergy:textures/block/machine_side",
+    "north": "industrialsynergy:textures/block/crusher_front",
+    "south": "industrialsynergy:textures/block/machine_side",
+    "west": "industrialsynergy:textures/block/machine_side",
+    "east": "industrialsynergy:textures/block/machine_side"
+  }
+}

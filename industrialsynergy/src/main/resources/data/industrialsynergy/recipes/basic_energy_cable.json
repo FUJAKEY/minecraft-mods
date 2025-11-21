@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:shaped",
+  "pattern": [
+    "III",
+    "RRR",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "item": "industrialsynergy:basic_energy_cable", "count": 6 }
+}
