@@ -31,21 +31,19 @@ public class SyncBodyStatsPacket {
     public static void handle(SyncBodyStatsPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             // Use DistExecutor to safely run client-side code
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                handleClient(msg);
-                return null;
-            });
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handleClient(msg));
         });
         ctx.get().setPacketHandled(true);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void handleClient(SyncBodyStatsPacket msg) {
+    private static Object handleClient(SyncBodyStatsPacket msg) {
         PlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
             player.getCapability(BodyCapabilityProvider.BODY_CAPABILITY).ifPresent(cap -> {
                 cap.deserializeNBT(msg.data);
             });
         }
+        return null;
     }
 }
