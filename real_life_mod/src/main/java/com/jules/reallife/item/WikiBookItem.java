@@ -22,10 +22,7 @@ public class WikiBookItem extends Item {
     @Override
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         if (worldIn.isClientSide) {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                openGui();
-                return null;
-            });
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openGui());
         }
         return ActionResult.success(playerIn.getItemInHand(handIn));
     }
