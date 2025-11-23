@@ -1,0 +1,10 @@
+{
+  "item.reallife.dumbbell": "Гантель",
+  "reallife.overlay.title": "Показатели Тела",
+  "reallife.overlay.strength": "Сила: %s",
+  "reallife.overlay.endurance": "Выносливость: %s",
+  "reallife.overlay.lungs": "Объем легких: %s",
+  "reallife.overlay.stamina": "Энергия: %s/%s",
+  "reallife.overlay.heart": "Здоровье сердца: %s%%",
+  "reallife.overlay.muscles": "Состояние мышц: %s%%"
+}
