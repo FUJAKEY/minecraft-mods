@@ -80,6 +80,7 @@ public class BodyStats implements IBodyStats {
     // New Implementations
     @Override public float getWater() { return water; }
     @Override public void setWater(float value) { this.water = Math.max(0, Math.min(100, value)); }
+    @Override public void addWater(float amount) { setWater(water + amount); }
     @Override public void consumeWater(float amount) { setWater(water - amount); }
 
     @Override public float getTemperature() { return temperature; }

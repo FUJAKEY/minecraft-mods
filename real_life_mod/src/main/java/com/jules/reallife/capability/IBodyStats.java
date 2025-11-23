@@ -33,6 +33,7 @@ public interface IBodyStats extends INBTSerializable<CompoundNBT> {
     // New Stats
     float getWater();
     void setWater(float value);
+    void addWater(float amount);
     void consumeWater(float amount);
 
     float getTemperature();

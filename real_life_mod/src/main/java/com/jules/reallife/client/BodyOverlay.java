@@ -11,8 +11,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.awt.Color;
-
 @Mod.EventBusSubscriber(modid = "reallife", value = Dist.CLIENT)
 public class BodyOverlay extends AbstractGui {
 
