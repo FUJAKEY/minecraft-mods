@@ -4,6 +4,9 @@
   "item.reallife.splint": "Splint",
   "item.reallife.protein_shake": "Protein Shake",
   "item.reallife.energy_bar": "Energy Bar",
+  "item.reallife.antibiotics": "Antibiotics",
+  "item.reallife.soap": "Soap",
+  "item.reallife.energy_drink": "Energy Drink",
   "block.reallife.treadmill": "Treadmill",
   "block.reallife.bench_press": "Bench Press",
   "reallife.overlay.title": "Real Life Stats",
@@ -16,5 +19,10 @@
   "reallife.overlay.water": "Hydration: %s%%",
   "reallife.overlay.temp": "Temp: %s°C",
   "reallife.overlay.bleeding": "BLEEDING!",
-  "reallife.overlay.broken_leg": "BROKEN LEG!"
+  "reallife.overlay.broken_leg": "BROKEN LEG!",
+  "reallife.overlay.sanity": "Sanity: %s%%",
+  "reallife.overlay.fatigue": "Fatigue: %s%%",
+  "reallife.overlay.hygiene": "Hygiene: %s%%",
+  "reallife.overlay.sick": "SICK!",
+  "reallife.overlay.poisoned": "POISONED!"
 }

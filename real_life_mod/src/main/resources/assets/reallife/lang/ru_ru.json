@@ -4,6 +4,9 @@
   "item.reallife.splint": "Медицинская Шина",
   "item.reallife.protein_shake": "Протеиновый Коктейль",
   "item.reallife.energy_bar": "Энергетический Батончик",
+  "item.reallife.antibiotics": "Антибиотики",
+  "item.reallife.soap": "Мыло",
+  "item.reallife.energy_drink": "Энергетик",
   "block.reallife.treadmill": "Беговая Дорожка",
   "block.reallife.bench_press": "Жим Лежа",
   "reallife.overlay.title": "Показатели Тела",
@@ -16,5 +19,10 @@
   "reallife.overlay.water": "Гидратация: %s%%",
   "reallife.overlay.temp": "Температура: %s°C",
   "reallife.overlay.bleeding": "КРОВОТЕЧЕНИЕ!",
-  "reallife.overlay.broken_leg": "СЛОМАНА НОГА!"
+  "reallife.overlay.broken_leg": "СЛОМАНА НОГА!",
+  "reallife.overlay.sanity": "Рассудок: %s%%",
+  "reallife.overlay.fatigue": "Усталость: %s%%",
+  "reallife.overlay.hygiene": "Гигиена: %s%%",
+  "reallife.overlay.sick": "БОЛЕЗНЬ!",
+  "reallife.overlay.poisoned": "ОТРАВЛЕНИЕ!"
 }

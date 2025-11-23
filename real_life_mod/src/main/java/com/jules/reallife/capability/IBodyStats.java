@@ -56,5 +56,30 @@ public interface IBodyStats extends INBTSerializable<CompoundNBT> {
     boolean isBleeding();
     void setBleeding(boolean value);
 
+    // New Hardcore Stats
+    float getSanity();
+    void setSanity(float value);
+    void changeSanity(float amount);
+
+    float getFatigue();
+    void setFatigue(float value);
+    void changeFatigue(float amount);
+
+    float getImmunity();
+    void setImmunity(float value);
+
+    float getHygiene();
+    void setHygiene(float value);
+    void changeHygiene(float amount);
+
+    int getGenetics();
+    void setGenetics(int value);
+
+    boolean isSick();
+    void setSick(boolean value);
+
+    boolean isFoodPoisoned();
+    void setFoodPoisoned(boolean value);
+
     void copyFrom(IBodyStats other);
 }

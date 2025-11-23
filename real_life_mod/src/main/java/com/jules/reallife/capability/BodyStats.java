@@ -19,6 +19,15 @@ public class BodyStats implements IBodyStats {
     private boolean legBroken = false;
     private boolean bleeding = false;
 
+    // Hardcore Stats
+    private float sanity = 100.0f;
+    private float fatigue = 0.0f;
+    private float immunity = 100.0f;
+    private float hygiene = 100.0f;
+    private int genetics = 0; // 0=Normal, 1=Athlete, 2=Runner, 3=Brittle
+    private boolean sick = false;
+    private boolean foodPoisoned = false;
+
     @Override
     public float getStrength() { return strength; }
     @Override
@@ -94,6 +103,31 @@ public class BodyStats implements IBodyStats {
     @Override public boolean isBleeding() { return bleeding; }
     @Override public void setBleeding(boolean value) { this.bleeding = value; }
 
+    // Hardcore Impl
+    @Override public float getSanity() { return sanity; }
+    @Override public void setSanity(float value) { this.sanity = Math.max(0, Math.min(100, value)); }
+    @Override public void changeSanity(float amount) { setSanity(sanity + amount); }
+
+    @Override public float getFatigue() { return fatigue; }
+    @Override public void setFatigue(float value) { this.fatigue = Math.max(0, Math.min(100, value)); }
+    @Override public void changeFatigue(float amount) { setFatigue(fatigue + amount); }
+
+    @Override public float getImmunity() { return immunity; }
+    @Override public void setImmunity(float value) { this.immunity = Math.max(0, Math.min(100, value)); }
+
+    @Override public float getHygiene() { return hygiene; }
+    @Override public void setHygiene(float value) { this.hygiene = Math.max(0, Math.min(100, value)); }
+    @Override public void changeHygiene(float amount) { setHygiene(hygiene + amount); }
+
+    @Override public int getGenetics() { return genetics; }
+    @Override public void setGenetics(int value) { this.genetics = value; }
+
+    @Override public boolean isSick() { return sick; }
+    @Override public void setSick(boolean value) { this.sick = value; }
+
+    @Override public boolean isFoodPoisoned() { return foodPoisoned; }
+    @Override public void setFoodPoisoned(boolean value) { this.foodPoisoned = value; }
+
     @Override
     public void copyFrom(IBodyStats other) {
         this.strength = other.getStrength();
@@ -110,6 +144,14 @@ public class BodyStats implements IBodyStats {
         this.liverHealth = other.getLiverHealth();
         this.legBroken = other.isLegBroken();
         this.bleeding = other.isBleeding();
+
+        this.sanity = other.getSanity();
+        this.fatigue = other.getFatigue();
+        this.immunity = other.getImmunity();
+        this.hygiene = other.getHygiene();
+        this.genetics = other.getGenetics();
+        this.sick = other.isSick();
+        this.foodPoisoned = other.isFoodPoisoned();
     }
 
     @Override
@@ -129,6 +171,14 @@ public class BodyStats implements IBodyStats {
         tag.putFloat("liverHealth", liverHealth);
         tag.putBoolean("legBroken", legBroken);
         tag.putBoolean("bleeding", bleeding);
+
+        tag.putFloat("sanity", sanity);
+        tag.putFloat("fatigue", fatigue);
+        tag.putFloat("immunity", immunity);
+        tag.putFloat("hygiene", hygiene);
+        tag.putInt("genetics", genetics);
+        tag.putBoolean("sick", sick);
+        tag.putBoolean("foodPoisoned", foodPoisoned);
         return tag;
     }
 
@@ -148,5 +198,13 @@ public class BodyStats implements IBodyStats {
         if (nbt.contains("liverHealth")) liverHealth = nbt.getFloat("liverHealth");
         if (nbt.contains("legBroken")) legBroken = nbt.getBoolean("legBroken");
         if (nbt.contains("bleeding")) bleeding = nbt.getBoolean("bleeding");
+
+        if (nbt.contains("sanity")) sanity = nbt.getFloat("sanity");
+        if (nbt.contains("fatigue")) fatigue = nbt.getFloat("fatigue");
+        if (nbt.contains("immunity")) immunity = nbt.getFloat("immunity");
+        if (nbt.contains("hygiene")) hygiene = nbt.getFloat("hygiene");
+        if (nbt.contains("genetics")) genetics = nbt.getInt("genetics");
+        if (nbt.contains("sick")) sick = nbt.getBoolean("sick");
+        if (nbt.contains("foodPoisoned")) foodPoisoned = nbt.getBoolean("foodPoisoned");
     }
 }

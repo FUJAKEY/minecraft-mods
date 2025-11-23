@@ -3,10 +3,13 @@ package com.jules.reallife;
 import com.jules.reallife.block.BenchPressBlock;
 import com.jules.reallife.block.TreadmillBlock;
 import com.jules.reallife.capability.BodyCapabilityProvider;
+import com.jules.reallife.item.AntibioticsItem;
 import com.jules.reallife.item.BandageItem;
 import com.jules.reallife.item.DumbbellItem;
 import com.jules.reallife.item.EnergyBarItem;
+import com.jules.reallife.item.EnergyDrinkItem;
 import com.jules.reallife.item.ProteinShakeItem;
+import com.jules.reallife.item.SoapItem;
 import com.jules.reallife.item.SplintItem;
 import com.jules.reallife.network.PacketHandler;
 import net.minecraft.block.Block;
@@ -60,6 +63,9 @@ public class RealLifeMod {
             event.getRegistry().register(new SplintItem());
             event.getRegistry().register(new ProteinShakeItem());
             event.getRegistry().register(new EnergyBarItem());
+            event.getRegistry().register(new AntibioticsItem());
+            event.getRegistry().register(new SoapItem());
+            event.getRegistry().register(new EnergyDrinkItem());
 
             event.getRegistry().register(new BlockItem(TREADMILL, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("treadmill"));
             event.getRegistry().register(new BlockItem(BENCH_PRESS, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("bench_press"));

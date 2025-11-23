@@ -48,12 +48,28 @@ public class BodyOverlay extends AbstractGui {
                 mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.water", String.format("%.0f", cap.getWater())).getString(), x, y + 80, 0x00BFFF);
                 mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.temp", String.format("%.1f", cap.getTemperature())).getString(), x, y + 90, 0xFFA500);
 
+                // Hardcore Stats
+                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.sanity", String.format("%.0f", cap.getSanity())).getString(), x, y + 100, 0x800080);
+                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.fatigue", String.format("%.0f", cap.getFatigue())).getString(), x, y + 110, 0x808080);
+                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.hygiene", String.format("%.0f", cap.getHygiene())).getString(), x, y + 120, 0xE0FFFF);
+
                 // Alerts
+                int alertY = y + 10;
                 if (cap.isBleeding()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.bleeding").getString(), x + 100, y + 10, 0xFF0000);
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.bleeding").getString(), x + 100, alertY, 0xFF0000);
+                     alertY += 10;
                 }
                 if (cap.isLegBroken()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.broken_leg").getString(), x + 100, y + 20, 0xFF4500);
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.broken_leg").getString(), x + 100, alertY, 0xFF4500);
+                     alertY += 10;
+                }
+                if (cap.isSick()) {
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.sick").getString(), x + 100, alertY, 0x32CD32);
+                     alertY += 10;
+                }
+                if (cap.isFoodPoisoned()) {
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.poisoned").getString(), x + 100, alertY, 0x006400);
+                     alertY += 10;
                 }
             });
         }
