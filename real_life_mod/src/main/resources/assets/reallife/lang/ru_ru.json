@@ -1,10 +1,20 @@
 {
   "item.reallife.dumbbell": "Гантель",
+  "item.reallife.bandage": "Бинт",
+  "item.reallife.splint": "Медицинская Шина",
+  "item.reallife.protein_shake": "Протеиновый Коктейль",
+  "item.reallife.energy_bar": "Энергетический Батончик",
+  "block.reallife.treadmill": "Беговая Дорожка",
+  "block.reallife.bench_press": "Жим Лежа",
   "reallife.overlay.title": "Показатели Тела",
   "reallife.overlay.strength": "Сила: %s",
   "reallife.overlay.endurance": "Выносливость: %s",
   "reallife.overlay.lungs": "Объем легких: %s",
   "reallife.overlay.stamina": "Энергия: %s/%s",
   "reallife.overlay.heart": "Здоровье сердца: %s%%",
-  "reallife.overlay.muscles": "Состояние мышц: %s%%"
+  "reallife.overlay.muscles": "Состояние мышц: %s%%",
+  "reallife.overlay.water": "Гидратация: %s%%",
+  "reallife.overlay.temp": "Температура: %s°C",
+  "reallife.overlay.bleeding": "КРОВОТЕЧЕНИЕ!",
+  "reallife.overlay.broken_leg": "СЛОМАНА НОГА!"
 }

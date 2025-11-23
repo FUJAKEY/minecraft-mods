@@ -30,5 +30,31 @@ public interface IBodyStats extends INBTSerializable<CompoundNBT> {
     void restoreStamina(float amount);
     float getMaxStamina();
 
+    // New Stats
+    float getWater();
+    void setWater(float value);
+    void consumeWater(float amount);
+
+    float getTemperature();
+    void setTemperature(float value);
+
+    float getProtein();
+    void setProtein(float value);
+    void addProtein(float amount);
+
+    float getCarbs();
+    void setCarbs(float value);
+    void addCarbs(float amount);
+
+    float getLiverHealth();
+    void setLiverHealth(float value);
+    void damageLiver(float amount);
+
+    boolean isLegBroken();
+    void setLegBroken(boolean value);
+
+    boolean isBleeding();
+    void setBleeding(boolean value);
+
     void copyFrom(IBodyStats other);
 }

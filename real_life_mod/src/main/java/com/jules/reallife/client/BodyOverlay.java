@@ -43,6 +43,18 @@ public class BodyOverlay extends AbstractGui {
                 // Organ Health
                 mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.heart", String.format("%.0f", cap.getHeartHealth())).getString(), x, y + 60, 0x8B0000);
                 mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.muscles", String.format("%.0f", cap.getMuscleIntegrity())).getString(), x, y + 70, 0xFFA07A);
+
+                // New Stats
+                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.water", String.format("%.0f", cap.getWater())).getString(), x, y + 80, 0x00BFFF);
+                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.temp", String.format("%.1f", cap.getTemperature())).getString(), x, y + 90, 0xFFA500);
+
+                // Alerts
+                if (cap.isBleeding()) {
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.bleeding").getString(), x + 100, y + 10, 0xFF0000);
+                }
+                if (cap.isLegBroken()) {
+                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.broken_leg").getString(), x + 100, y + 20, 0xFF4500);
+                }
             });
         }
     }

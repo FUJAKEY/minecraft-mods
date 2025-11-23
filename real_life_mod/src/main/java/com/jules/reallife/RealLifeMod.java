@@ -1,8 +1,16 @@
 package com.jules.reallife;
 
+import com.jules.reallife.block.BenchPressBlock;
+import com.jules.reallife.block.TreadmillBlock;
 import com.jules.reallife.capability.BodyCapabilityProvider;
+import com.jules.reallife.item.BandageItem;
 import com.jules.reallife.item.DumbbellItem;
+import com.jules.reallife.item.EnergyBarItem;
+import com.jules.reallife.item.ProteinShakeItem;
+import com.jules.reallife.item.SplintItem;
 import com.jules.reallife.network.PacketHandler;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,9 +42,27 @@ public class RealLifeMod {
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
+        public static Block TREADMILL;
+        public static Block BENCH_PRESS;
+
+        @SubscribeEvent
+        public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+            TREADMILL = new TreadmillBlock();
+            BENCH_PRESS = new BenchPressBlock();
+            event.getRegistry().register(TREADMILL);
+            event.getRegistry().register(BENCH_PRESS);
+        }
+
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
             event.getRegistry().register(new DumbbellItem());
+            event.getRegistry().register(new BandageItem());
+            event.getRegistry().register(new SplintItem());
+            event.getRegistry().register(new ProteinShakeItem());
+            event.getRegistry().register(new EnergyBarItem());
+
+            event.getRegistry().register(new BlockItem(TREADMILL, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("treadmill"));
+            event.getRegistry().register(new BlockItem(BENCH_PRESS, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("bench_press"));
         }
     }
 

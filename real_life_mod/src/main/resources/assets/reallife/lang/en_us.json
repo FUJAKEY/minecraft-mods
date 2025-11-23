@@ -1,10 +1,20 @@
 {
   "item.reallife.dumbbell": "Dumbbell",
+  "item.reallife.bandage": "Bandage",
+  "item.reallife.splint": "Splint",
+  "item.reallife.protein_shake": "Protein Shake",
+  "item.reallife.energy_bar": "Energy Bar",
+  "block.reallife.treadmill": "Treadmill",
+  "block.reallife.bench_press": "Bench Press",
   "reallife.overlay.title": "Real Life Stats",
   "reallife.overlay.strength": "Strength: %s",
   "reallife.overlay.endurance": "Endurance: %s",
   "reallife.overlay.lungs": "Lung Capacity: %s",
   "reallife.overlay.stamina": "Stamina: %s/%s",
   "reallife.overlay.heart": "Heart Health: %s%%",
-  "reallife.overlay.muscles": "Muscle Integrity: %s%%"
+  "reallife.overlay.muscles": "Muscle Integrity: %s%%",
+  "reallife.overlay.water": "Hydration: %s%%",
+  "reallife.overlay.temp": "Temp: %s°C",
+  "reallife.overlay.bleeding": "BLEEDING!",
+  "reallife.overlay.broken_leg": "BROKEN LEG!"
 }
