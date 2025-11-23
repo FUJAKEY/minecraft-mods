@@ -11,6 +11,7 @@ import com.jules.reallife.item.EnergyDrinkItem;
 import com.jules.reallife.item.ProteinShakeItem;
 import com.jules.reallife.item.SoapItem;
 import com.jules.reallife.item.SplintItem;
+import com.jules.reallife.item.WikiBookItem;
 import com.jules.reallife.network.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -47,6 +48,7 @@ public class RealLifeMod {
     public static class RegistryEvents {
         public static Block TREADMILL;
         public static Block BENCH_PRESS;
+        public static Item WIKI_BOOK;
 
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
@@ -66,6 +68,9 @@ public class RealLifeMod {
             event.getRegistry().register(new AntibioticsItem());
             event.getRegistry().register(new SoapItem());
             event.getRegistry().register(new EnergyDrinkItem());
+
+            WIKI_BOOK = new WikiBookItem();
+            event.getRegistry().register(WIKI_BOOK);
 
             event.getRegistry().register(new BlockItem(TREADMILL, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("treadmill"));
             event.getRegistry().register(new BlockItem(BENCH_PRESS, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName("bench_press"));

@@ -24,5 +24,12 @@
   "reallife.overlay.fatigue": "Fatigue: %s%%",
   "reallife.overlay.hygiene": "Hygiene: %s%%",
   "reallife.overlay.sick": "SICK!",
-  "reallife.overlay.poisoned": "POISONED!"
+  "reallife.overlay.poisoned": "POISONED!",
+  "item.reallife.wiki_book": "Real Life Guide",
+  "reallife.wiki.title": "Real Life Mod Guide",
+  "reallife.wiki.page0": "Welcome to Real Life Mod!\n\nYour body now has stats:\n- Strength: Physical power.\n- Endurance: Fatigue resistance.\n- Lung Capacity: Stamina regen.\n- Stamina: Energy for running/fighting.\n\nMonitor them on the left overlay!",
+  "reallife.wiki.page1": "NEEDS:\n\n- Thirst: Drink water. Dehydration causes weakness.\n- Temperature: Dress for the biome. Extremes hurt immunity.\n- Nutrition: \n  Protein -> Muscle Growth.\n  Carbs -> Energy Regen.",
+  "reallife.wiki.page2": "MEDICAL:\n\n- Bleeding: Use Bandage.\n- Broken Leg: Use Splint.\n- Sickness: Use Antibiotics.\n\nDon't fall from heights and avoid thorny plants!",
+  "reallife.wiki.page3": "TRAINING:\n\n- Treadmill: Trains Lungs.\n- Bench Press: Trains Strength (requires energy).\n- Dumbbell: Portable training.\n\nGenetics: You are born with a trait (Athlete, Runner, etc).",
+  "reallife.wiki.page4": "HARDCORE:\n\n- Sanity: Stay in light. Dark causes hallucinations.\n- Fatigue: Sleep or drink Energy Drinks.\n- Hygiene: Wash with Soap or in water to avoid attracting mobs."
 }

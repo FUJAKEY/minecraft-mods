@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.network.play.server.SPlaySoundEffectPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -146,7 +147,7 @@ public class BodyEventHandler {
                     float biomeTemp = player.level.getBiome(player.blockPosition()).getTemperature(player.blockPosition());
 
                     // Thirst
-                    float waterLoss = 0.2f;
+                    float waterLoss = 0.1f; // Reduced from 0.2
                     if (biomeTemp > 1.2f) waterLoss *= 2.0f;
                     if (cap.isFoodPoisoned()) waterLoss *= 1.5f;
                     cap.consumeWater(waterLoss);
@@ -180,7 +181,7 @@ public class BodyEventHandler {
                     else cap.changeHygiene(-0.01f); // Slow natural decay
 
                     // Fatigue
-                    cap.changeFatigue(0.05f); // Increases over time
+                    cap.changeFatigue(0.02f); // Reduced from 0.05
 
                     // Sanity
                     int light = player.level.getBrightness(LightType.BLOCK, player.blockPosition());
@@ -194,15 +195,21 @@ public class BodyEventHandler {
 
                 // Sickness Cough
                 if (cap.isSick() && player.tickCount % 300 == 0) {
-                    player.level.playSound(null, player.blockPosition(), SoundEvents.PANDA_SNEEZE, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                    ((ServerPlayerEntity)player).connection.send(new SPlaySoundEffectPacket(
+                        SoundEvents.PANDA_SNEEZE, SoundCategory.PLAYERS,
+                        player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f));
                 }
 
                 // Sanity Hallucinations
                 if (cap.getSanity() < 30.0f && player.tickCount % 400 == 0) {
                     if (RANDOM.nextBoolean()) {
-                        player.level.playSound(null, player.blockPosition(), SoundEvents.TNT_PRIMED, SoundCategory.AMBIENT, 1.0f, 1.0f);
+                        ((ServerPlayerEntity)player).connection.send(new SPlaySoundEffectPacket(
+                            SoundEvents.TNT_PRIMED, SoundCategory.AMBIENT,
+                            player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f));
                     } else {
-                        player.level.playSound(null, player.blockPosition(), SoundEvents.ZOMBIE_AMBIENT, SoundCategory.AMBIENT, 1.0f, 1.0f);
+                        ((ServerPlayerEntity)player).connection.send(new SPlaySoundEffectPacket(
+                            SoundEvents.ZOMBIE_AMBIENT, SoundCategory.AMBIENT,
+                            player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f));
                     }
                 }
 
