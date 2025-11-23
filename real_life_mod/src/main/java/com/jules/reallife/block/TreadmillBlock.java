@@ -20,8 +20,8 @@ public class TreadmillBlock extends Block {
     }
 
     @Override
-    public void stepOn(World worldIn, BlockPos pos, BlockState state, Entity entityIn) {
-        super.stepOn(worldIn, pos, state, entityIn);
+    public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
+        super.stepOn(worldIn, pos, entityIn);
 
         if (!worldIn.isClientSide && entityIn instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityIn;
