@@ -2,6 +2,7 @@ package com.jules.reallife.client;
 
 import com.jules.reallife.capability.BodyCapabilityProvider;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,51 +28,99 @@ public class BodyOverlay extends AbstractGui {
             player.getCapability(BodyCapabilityProvider.BODY_CAPABILITY).ifPresent(cap -> {
                 int width = mc.getWindow().getGuiScaledWidth();
                 int height = mc.getWindow().getGuiScaledHeight();
-                int x = 10;
-                int y = height / 2 - 50;
 
-                // Helper to draw text with shadow
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.title").getString(), x, y - 10, Color.WHITE.getRGB());
+                // Use a cleaner layout. Left-middle screen.
+                int startX = 10;
+                int startY = height / 2 - 80;
+                int barWidth = 60;
+                int barHeight = 4;
+                int gap = 12;
 
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.strength", String.format("%.1f", cap.getStrength())).getString(), x, y + 10, Color.RED.getRGB());
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.endurance", String.format("%.1f", cap.getEndurance())).getString(), x, y + 20, Color.GREEN.getRGB());
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.lungs", String.format("%.1f", cap.getLungCapacity())).getString(), x, y + 30, Color.BLUE.getRGB());
+                // Background box
+                fill(ms, startX - 5, startY - 5, startX + barWidth + 5, startY + (gap * 9) + 5, 0x80000000);
 
-                // Stamina Bar
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.stamina", String.format("%.0f", cap.getStamina()), String.format("%.0f", cap.getMaxStamina())).getString(), x, y + 40, Color.YELLOW.getRGB());
+                // Title
+                mc.font.drawShadow(ms, "Body Status", startX, startY - 15, 0xFFFFFF);
 
-                // Organ Health
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.heart", String.format("%.0f", cap.getHeartHealth())).getString(), x, y + 60, 0x8B0000);
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.muscles", String.format("%.0f", cap.getMuscleIntegrity())).getString(), x, y + 70, 0xFFA07A);
+                int currentY = startY;
 
-                // New Stats
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.water", String.format("%.0f", cap.getWater())).getString(), x, y + 80, 0x00BFFF);
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.temp", String.format("%.1f", cap.getTemperature())).getString(), x, y + 90, 0xFFA500);
+                // --- PHYSICAL ---
+                drawStat(ms, mc, startX, currentY, "Str", cap.getStrength(), 100.0f, 0xFFFF5555);
+                currentY += gap;
+                drawStat(ms, mc, startX, currentY, "End", cap.getEndurance(), 100.0f, 0xFF55FF55);
+                currentY += gap;
+                drawStat(ms, mc, startX, currentY, "Lung", cap.getLungCapacity(), 100.0f, 0xFF5555FF);
+                currentY += gap;
+                drawStat(ms, mc, startX, currentY, "Stam", cap.getStamina(), cap.getMaxStamina(), 0xFFFFFF55);
+                currentY += gap;
 
-                // Hardcore Stats
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.sanity", String.format("%.0f", cap.getSanity())).getString(), x, y + 100, 0x800080);
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.fatigue", String.format("%.0f", cap.getFatigue())).getString(), x, y + 110, 0x808080);
-                mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.hygiene", String.format("%.0f", cap.getHygiene())).getString(), x, y + 120, 0xE0FFFF);
+                // --- NEEDS ---
+                drawStat(ms, mc, startX, currentY, "H2O", cap.getWater(), 100.0f, 0xFF00BFFF);
+                currentY += gap;
 
-                // Alerts
-                int alertY = y + 10;
+                // Temperature is special
+                String tempText = String.format("Temp: %.1f°C", cap.getTemperature());
+                int tempColor = cap.getTemperature() < 10 ? 0xFF00FFFF : (cap.getTemperature() > 30 ? 0xFFFF4500 : 0xFFFFA500);
+                mc.font.drawShadow(ms, tempText, startX, currentY, tempColor);
+                currentY += gap;
+
+                // --- HARDCORE ---
+                drawStat(ms, mc, startX, currentY, "Sanity", cap.getSanity(), 100.0f, 0xFFAA00AA);
+                currentY += gap;
+                drawStat(ms, mc, startX, currentY, "Fatigue", cap.getFatigue(), 100.0f, 0xFF888888);
+                currentY += gap;
+                drawStat(ms, mc, startX, currentY, "Hyg", cap.getHygiene(), 100.0f, 0xFFE0FFFF);
+                currentY += gap;
+
+                // --- ALERTS ---
+                int alertX = startX + barWidth + 10;
+                int alertY = startY;
+
                 if (cap.isBleeding()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.bleeding").getString(), x + 100, alertY, 0xFF0000);
-                     alertY += 10;
+                    mc.font.drawShadow(ms, "BLEEDING!", alertX, alertY, 0xFFFF0000);
+                    alertY += 10;
                 }
                 if (cap.isLegBroken()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.broken_leg").getString(), x + 100, alertY, 0xFF4500);
-                     alertY += 10;
+                    mc.font.drawShadow(ms, "BROKEN LEG!", alertX, alertY, 0xFFFF4500);
+                    alertY += 10;
                 }
                 if (cap.isSick()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.sick").getString(), x + 100, alertY, 0x32CD32);
-                     alertY += 10;
+                    mc.font.drawShadow(ms, "SICK!", alertX, alertY, 0xFF32CD32);
+                    alertY += 10;
                 }
                 if (cap.isFoodPoisoned()) {
-                     mc.font.drawShadow(ms, new net.minecraft.util.text.TranslationTextComponent("reallife.overlay.poisoned").getString(), x + 100, alertY, 0x006400);
+                    mc.font.drawShadow(ms, "POISONED!", alertX, alertY, 0xFF006400);
+                    alertY += 10;
+                }
+                if (cap.getSanity() < 20) {
+                     mc.font.drawShadow(ms, "INSANE", alertX, alertY, 0xFF800080);
+                     alertY += 10;
+                }
+                if (cap.getWater() < 10) {
+                     mc.font.drawShadow(ms, "THIRSTY!", alertX, alertY, 0xFF0000FF);
                      alertY += 10;
                 }
             });
         }
+    }
+
+    private static void drawStat(MatrixStack ms, Minecraft mc, int x, int y, String label, double current, double max, int color) {
+        // Draw label
+        mc.font.draw(ms, label, x, y, color);
+
+        // Draw bar
+        int barX = x + 35;
+        int barY = y + 2;
+        int barWidth = 40;
+        int barHeight = 4;
+
+        float pct = (float)(current / max);
+        if (pct > 1.0f) pct = 1.0f;
+        if (pct < 0.0f) pct = 0.0f;
+
+        int filledWidth = (int)(barWidth * pct);
+
+        fill(ms, barX, barY, barX + barWidth, barY + barHeight, 0xFF404040); // Background
+        fill(ms, barX, barY, barX + filledWidth, barY + barHeight, color);   // Foreground
     }
 }

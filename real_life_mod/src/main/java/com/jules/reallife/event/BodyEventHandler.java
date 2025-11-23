@@ -8,9 +8,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.network.play.server.SPlaySoundEffectPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -92,12 +95,22 @@ public class BodyEventHandler {
             Item item = event.getItem().getItem();
 
             player.getCapability(BodyCapabilityProvider.BODY_CAPABILITY).ifPresent(cap -> {
+                 // Food Poisoning Chance
                  if (item == Items.ROTTEN_FLESH || item == Items.CHICKEN) {
                      if (RANDOM.nextFloat() < 0.3f) {
                          cap.setFoodPoisoned(true);
                          player.sendMessage(new StringTextComponent("§cYou feel sick... (Food Poisoning)"), player.getUUID());
                      }
                  }
+
+                 // Thirst - Water Bottles
+                 if (item instanceof PotionItem) {
+                     if (PotionUtils.getPotion(event.getItem()) == Potions.WATER) {
+                         cap.addWater(30.0f);
+                         player.sendMessage(new StringTextComponent("§bThirst quenched."), player.getUUID());
+                     }
+                 }
+
                  PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
                         new SyncBodyStatsPacket(cap.serializeNBT()));
             });
@@ -148,7 +161,8 @@ public class BodyEventHandler {
 
                     // Thirst
                     float waterLoss = 0.1f; // Reduced from 0.2
-                    if (biomeTemp > 1.2f) waterLoss *= 2.0f;
+                    if (biomeTemp > 1.2f) waterLoss *= 2.0f; // Desert/Mesa
+                    if (biomeTemp < 0.2f) waterLoss *= 0.8f; // Cold
                     if (cap.isFoodPoisoned()) waterLoss *= 1.5f;
                     cap.consumeWater(waterLoss);
 
@@ -156,13 +170,18 @@ public class BodyEventHandler {
                     cap.addCarbs(-0.1f);
                     cap.addProtein(-0.05f);
 
-                    // Temperature
+                    // Temperature Simulation
+                    // Base target temp is 36.6.
+                    // Biome temp ranges from 0.0 (Cold) to 2.0 (Hot).
+                    // We map this to body temp influence.
                     float targetTemp = 36.6f;
                     if (biomeTemp < 0.2) targetTemp = 35.0f;
                     if (biomeTemp > 1.2) targetTemp = 38.0f;
+
+                    // Move towards target
                     float currentTemp = cap.getTemperature();
                     if (Math.abs(currentTemp - targetTemp) > 0.1f) {
-                        cap.setTemperature(currentTemp + (targetTemp - currentTemp) * 0.1f);
+                        cap.setTemperature(currentTemp + (targetTemp - currentTemp) * 0.05f);
                     }
 
                     // Immunity & Sickness
@@ -170,7 +189,7 @@ public class BodyEventHandler {
                     else if (cap.getImmunity() < 100.0f) cap.setImmunity(cap.getImmunity() + 0.5f);
 
                     if (cap.getImmunity() < 20.0f && !cap.isSick()) {
-                        if (RANDOM.nextFloat() < 0.1f) {
+                        if (RANDOM.nextFloat() < 0.05f) {
                             cap.setSick(true);
                             player.sendMessage(new StringTextComponent("§cYou caught a cold!"), player.getUUID());
                         }
@@ -178,15 +197,15 @@ public class BodyEventHandler {
 
                     // Hygiene
                     if (player.isInWater()) cap.setHygiene(100.0f);
-                    else cap.changeHygiene(-0.01f); // Slow natural decay
+                    else cap.changeHygiene(-0.01f);
 
                     // Fatigue
-                    cap.changeFatigue(0.02f); // Reduced from 0.05
+                    cap.changeFatigue(0.02f);
 
-                    // Sanity
+                    // Sanity - Darkness Drains Sanity
                     int light = player.level.getBrightness(LightType.BLOCK, player.blockPosition());
-                    if (light < 4) cap.changeSanity(-0.1f);
-                    else if (light > 10) cap.changeSanity(0.1f);
+                    if (light < 4) cap.changeSanity(-0.2f); // Dark
+                    else if (light > 10) cap.changeSanity(0.1f); // Bright
 
                     changed = true;
                 }
@@ -203,13 +222,14 @@ public class BodyEventHandler {
                 // Sanity Hallucinations
                 if (cap.getSanity() < 30.0f && player.tickCount % 400 == 0) {
                     if (RANDOM.nextBoolean()) {
+                        // Play scary sound only to this player
                         ((ServerPlayerEntity)player).connection.send(new SPlaySoundEffectPacket(
                             SoundEvents.TNT_PRIMED, SoundCategory.AMBIENT,
-                            player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f));
+                            player.getX() + RANDOM.nextInt(5), player.getY(), player.getZ() + RANDOM.nextInt(5), 1.0f, 1.0f));
                     } else {
                         ((ServerPlayerEntity)player).connection.send(new SPlaySoundEffectPacket(
                             SoundEvents.ZOMBIE_AMBIENT, SoundCategory.AMBIENT,
-                            player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f));
+                            player.getX() - RANDOM.nextInt(5), player.getY(), player.getZ() - RANDOM.nextInt(5), 1.0f, 1.0f));
                     }
                 }
 
